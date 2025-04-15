@@ -1,0 +1,2556 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Анализатор кандидатов на интервью</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="light">
+    <div class="container my-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="mb-0">Анализатор кандидатов на интервью</h1>
+            <button id="theme-toggle" class="btn btn-outline-secondary">
+                <i class="bi bi-moon"></i>
+            </button>
+        </div>
+        
+        <!-- Информация о кандидате (перенесена вверх) -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Информация о кандидате</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="candidateName" class="form-label">ФИО кандидата</label>
+                            <input type="text" class="form-control" id="candidateName">
+                        </div>
+                        <div class="mb-3">
+                            <label for="desiredGrade" class="form-label">Желаемый грейд</label>
+                            <select class="form-select" id="desiredGrade">
+                                <option value="">Выберите грейд</option>
+                                <option value="J">Junior (J)</option>
+                                <option value="J+">Junior+ (J+)</option>
+                                <option value="M">Middle (M)</option>
+                                <option value="M+">Middle+ (M+)</option>
+                                <option value="S">Senior (S)</option>
+                                <option value="S+">Senior+ (S+)</option>
+                                <option value="L">Lead (L)</option>
+                                <option value="L+">Lead+ (L+)</option>
+                                <option value="H">Head (H)</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="salary" class="form-label">Финансовые ожидания (бел. руб.)</label>
+                            <input type="number" class="form-control" id="salary">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="interviewDate" class="form-label">Дата интервью</label>
+                            <input type="date" class="form-control" id="interviewDate">
+                        </div>
+                        <div class="mb-3">
+                            <label for="interviewer" class="form-label">Интервьюер</label>
+                            <input type="text" class="form-control" id="interviewer">
+                        </div>
+                        <div class="mb-3">
+                            <label for="comments" class="form-label">Комментарий</label>
+                            <textarea class="form-control" id="comments" rows="3"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center mt-3">
+                    <button id="analyzeBtn" class="btn btn-primary">
+                        <i class="bi bi-search"></i> Сформировать отчет
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-12">
+                <div id="skills-section">
+                    <h3 class="mb-3">Оценка навыков</h3>
+                    
+                    <div id="skillsContainer">
+                        <!-- Skills will be added here dynamically -->
+                    </div>
+                </div>
+                
+                <div id="result-section" class="mt-5">
+                    <h3 class="mb-3">Результаты анализа</h3>
+                    
+                    <div class="card mb-4">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">Итоговая оценка</h5>
+                            <button id="openReportBtn" class="btn btn-sm btn-primary">
+                                <i class="bi bi-file-earmark-text"></i> Открыть отчет
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <h4 id="result-grade" class="text-center"></h4>
+                                <p id="result-description" class="text-center"></p>
+                            </div>
+                            
+                            <div class="chart-container w-100">
+                                <canvas id="skills-radar-chart"></canvas>
+                            </div>
+                            
+                            <div class="row mt-4">
+                                <div class="col-md-4">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h6 class="mb-0">Финансовые ожидания</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <p id="salary-display" class="mb-0">Не указано</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h6 class="mb-0">Желаемый грейд</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <p id="desired-grade-display" class="mb-0">Не указан</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h6 class="mb-0">Комментарий</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <p id="comments-display" class="mb-0">Нет комментариев</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-4">
+                                <h5>Детальный анализ по навыкам</h5>
+                                <div id="detailed-skills-analysis"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Рекомендации</h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="recommendations"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Скрытый iframe для подготовки отчета -->
+    <iframe id="reportFrame" style="display:none;"></iframe>
+
+    <!-- Модальное окно для аналитического задания -->
+    <div class="modal fade" id="analyticsTaskModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Ведение и формирование аналитических данных</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="analyticsTaskContent"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                    <button type="button" class="btn btn-primary" id="analyticsTaskSubmit"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно для тестового задания по roadmap -->
+    <div class="modal fade" id="roadmapTaskModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Разработка/исполнение roadmap и проведение анализа</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="roadmapTaskContent"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                    <button type="button" class="btn btn-primary" id="roadmapTaskSubmit">Далее</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно для тестового задания по сорсингу -->
+    <div class="modal fade" id="sourcingTaskModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Использование LinkedIn и X-Ray запросов для сорсинга специалистов</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="sourcingTaskContent"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                    <button type="button" class="btn btn-primary" id="sourcingTaskSubmit">Отправить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно для тестового задания по техническим знаниям -->
+    <div class="modal fade" id="techKnowledgeTaskModal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Знание технических и технологических специфик в ИТ и digital направлениях</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="techKnowledgeTaskContent"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                    <button type="button" class="btn btn-primary" id="techKnowledgeTaskSubmit">Проверить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .tech-cards-container {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .tech-category {
+            flex: 1;
+            min-height: 200px;
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            transition: all 0.2s ease;
+        }
+
+        .tech-category.drag-over {
+            border-color: #0d6efd;
+            background-color: #e7f1ff;
+        }
+
+        .tech-category h6 {
+            margin-bottom: 15px;
+            text-align: center;
+            color: #495057;
+        }
+
+        .tech-card {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            cursor: move;
+            transition: all 0.2s ease;
+            text-align: center;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .tech-card:hover {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        .tech-card.tech-icon {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+        }
+
+        .tech-card.tech-icon i {
+            font-size: 2rem;
+            margin-bottom: 8px;
+            color: #495057;
+        }
+
+        .tech-card.tech-icon .tech-name {
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+
+        .tech-card.tech-icon:hover {
+            background: #e9ecef;
+            border-color: #dee2e6;
+        }
+
+        .tech-card.tech-icon:hover i {
+            color: #212529;
+        }
+
+        .tech-card.uncategorized {
+            background: #fff3cd;
+            border-color: #ffeeba;
+        }
+
+        .tech-card.uncategorized:hover {
+            background: #fff0c0;
+        }
+
+        .tech-cards-pool {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .tech-cards-pool h6 {
+            margin-bottom: 15px;
+            color: #495057;
+        }
+
+        .tech-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 10px;
+            padding: 10px;
+        }
+
+        .tech-cards-dropzone {
+            min-height: 50px;
+            padding: 10px;
+            border-radius: 4px;
+            background: rgba(0,0,0,0.02);
+        }
+
+        .code-card {
+            font-family: 'Consolas', 'Monaco', monospace;
+            white-space: pre;
+            overflow-x: auto;
+            background: #282c34;
+            color: #abb2bf;
+            border: 1px solid #3b4048;
+            text-align: left;
+            padding: 8px;
+            font-size: 0.85em;
+            position: relative;
+        }
+
+        .code-card::before {
+            content: 'CODE';
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: #3b4048;
+            color: #abb2bf;
+            padding: 2px 6px;
+            font-size: 0.7em;
+            border-bottom-left-radius: 4px;
+        }
+
+        .code-card pre {
+            margin: 0;
+            padding: 0;
+        }
+
+        .code-card code {
+            font-family: inherit;
+        }
+
+        .tech-card.code-card {
+            background: #282c34;
+            color: #abb2bf;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9rem;
+            padding: 15px;
+            position: relative;
+            min-height: 120px;
+            max-height: 150px;
+            overflow: hidden;
+        }
+
+        .tech-card.code-card .code-label {
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            background: #3b4048;
+            color: #abb2bf;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-family: system-ui, -apple-system, sans-serif;
+        }
+
+        .tech-card.code-card .code-content {
+            margin-top: 25px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .tech-card.code-card .code-content::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 30px;
+            background: linear-gradient(transparent, #282c34);
+            pointer-events: none;
+        }
+
+        .tech-card.code-card pre {
+            margin: 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .tech-card.code-card code {
+            color: #abb2bf;
+            font-family: inherit;
+        }
+
+        .tech-cards-pool {
+            background: #f8f9fa;
+            border: 2px dashed #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            min-height: 200px;
+            margin-bottom: 20px;
+        }
+
+        .tech-cards-pool .pool-label {
+            text-align: center;
+            color: #6c757d;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+        }
+
+        .tech-cards-pool.drag-over {
+            background: #e9ecef;
+            border-color: #adb5bd;
+        }
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="constant.js"></script>
+    <script>
+
+        // Добавляем обработчики событий для автоматического обновления
+        document.addEventListener('DOMContentLoaded', function() {
+            // Инициализация начального состояния
+            initializeForm();
+            
+            // Добавляем обработчики событий для всех полей ввода
+            const formInputs = [
+                'candidateName', 'desiredGrade', 'salary', 
+                'interviewDate', 'interviewer', 'comments'
+            ];
+            
+            formInputs.forEach(inputId => {
+                const element = document.getElementById(inputId);
+                if (element) {
+                    element.addEventListener('input', updateResults);
+                    element.addEventListener('change', updateResults);
+                }
+            });
+            
+            // Добавляем обработчики для всех ползунков навыков
+            skills.forEach(skill => {
+                const rangeElement = document.getElementById(`skill${skill.id}Range`);
+                if (rangeElement) {
+                    rangeElement.addEventListener('input', updateResults);
+                    rangeElement.addEventListener('change', updateResults);
+                }
+            });
+            
+            // Инициализируем график при загрузке страницы
+            initializeChart();
+        });
+
+        // Функция инициализации формы
+        function initializeForm() {
+            // Устанавливаем текущую дату по умолчанию
+            const today = new Date().toISOString().split('T')[0];
+            const dateInput = document.getElementById('interviewDate');
+            if (dateInput) {
+                dateInput.value = today;
+            }
+            
+            // Показываем секцию результатов
+            document.getElementById('result-section').style.display = 'block';
+            
+            // Обновляем результаты
+            updateResults();
+        }
+
+        // Функция инициализации графика
+        function initializeChart() {
+            // Создаем начальные данные для графика
+            const initialRatings = {};
+            skills.forEach(skill => {
+                initialRatings[skill.id] = 5; // Среднее значение по умолчанию
+            });
+            
+            // Генерируем начальный график
+            generateSkillsChart(initialRatings, "M");
+        }
+
+        // Функция обновления результатов
+        function updateResults() {
+            try {
+                // Получаем данные из формы
+                const candidateName = document.getElementById('candidateName').value || 'Кандидат';
+                const desiredGrade = document.getElementById('desiredGrade').value || '';
+                const interviewDate = document.getElementById('interviewDate').value || new Date().toISOString().split('T')[0];
+                const interviewer = document.getElementById('interviewer').value || 'Неуказанный интервьюер';
+                const salary = document.getElementById('salary').value || 'Не указано';
+                const comments = document.getElementById('comments').value || '';
+                
+                // Обновляем отображаемые поля
+                document.getElementById('salary-display').textContent = salary ? `${salary} бел. руб.` : 'Не указано';
+                document.getElementById('desired-grade-display').textContent = desiredGrade ? `${desiredGrade} - ${gradeDescriptions[desiredGrade] || ''}` : 'Не указан';
+                document.getElementById('comments-display').textContent = comments || 'Нет комментариев';
+                
+                // Собираем все оценки навыков
+                const ratings = {};
+                skills.forEach(skill => {
+                    const rangeElement = document.getElementById(`skill${skill.id}Range`);
+                    if (rangeElement) {
+                        ratings[skill.id] = parseInt(rangeElement.value);
+                    }
+                });
+                
+                // Генерируем отчет
+                generateReport(candidateName, desiredGrade, interviewDate, interviewer, ratings, salary, comments);
+            } catch (error) {
+                console.error("Ошибка при обновлении результатов:", error);
+            }
+        }
+
+        // Тестовые задания
+        const testTasks = {
+            "Ведение и формирование аналитических данных": {
+                title: "Ведение и формирование аналитических данных",
+                description: "Оцените навыки работы с аналитическими данными в рекрутинге",
+                type: "step-by-step",
+                steps: [
+                    {
+                        question: "Какие основные метрики вы используете для оценки эффективности рекрутинга?",
+                        options: [
+                            {
+                                text: "Только время-to-hire и cost-per-hire",
+                                score: 1,
+                                feedback: "Это базовые метрики, но их недостаточно для полной картины"
+                            },
+                            {
+                                text: "Время-to-hire, cost-per-hire и качество найма",
+                                score: 2,
+                                feedback: "Хороший набор базовых метрик"
+                            },
+                            {
+                                text: "Комплексный набор метрик включая retention rate и NPS кандидатов",
+                                score: 3,
+                                feedback: "Отличное понимание важности комплексных метрик"
+                            },
+                            {
+                                text: "Кастомные метрики под специфику бизнеса и должности",
+                                score: 4,
+                                feedback: "Отличное понимание необходимости адаптации метрик"
+                            },
+                            {
+                                text: "Predictive analytics и AI-based метрики",
+                                score: 5,
+                                feedback: "Превосходное понимание современных подходов к аналитике"
+                            }
+                        ]
+                    },
+                    {
+                        question: "Как вы анализируете эффективность источников найма?",
+                        options: [
+                            {
+                                text: "По количеству откликов с каждого источника",
+                                score: 1,
+                                feedback: "Базовый подход, не учитывает качество кандидатов"
+                            },
+                            {
+                                text: "По количеству откликов и прохождению скрининга",
+                                score: 2,
+                                feedback: "Учитывает качество кандидатов на начальном этапе"
+                            },
+                            {
+                                text: "По полному циклу найма до выхода на работу",
+                                score: 3,
+                                feedback: "Хороший подход к оценке end-to-end эффективности"
+                            },
+                            {
+                                text: "С учетом retention rate и performance на позиции",
+                                score: 4,
+                                feedback: "Отличное понимание долгосрочной эффективности"
+                            },
+                            {
+                                text: "Используя ML-модели для прогнозирования успешности найма",
+                                score: 5,
+                                feedback: "Превосходное понимание современных методов анализа"
+                            }
+                        ]
+                    },
+                    {
+                        question: "Как вы используете данные для оптимизации процесса найма?",
+                        options: [
+                            {
+                                text: "Анализирую только основные метрики времени найма",
+                                score: 1,
+                                feedback: "Базовый подход к оптимизации"
+                            },
+                            {
+                                text: "Ищу узкие места в процессе по метрикам",
+                                score: 2,
+                                feedback: "Хорошее понимание необходимости анализа процесса"
+                            },
+                            {
+                                text: "Провожу A/B тестирование разных подходов",
+                                score: 3,
+                                feedback: "Отличное понимание важности экспериментов"
+                            },
+                            {
+                                text: "Создаю предиктивные модели для оптимизации",
+                                score: 4,
+                                feedback: "Продвинутый подход к оптимизации"
+                            },
+                            {
+                                text: "Внедряю AI-based решения для автоматизации",
+                                score: 5,
+                                feedback: "Превосходное понимание современных технологий"
+                            }
+                        ]
+                    },
+                    {
+                        question: "Как вы представляете аналитические данные стейкхолдерам?",
+                        options: [
+                            {
+                                text: "Предоставляю только базовые отчеты",
+                                score: 1,
+                                feedback: "Базовый подход к презентации данных"
+                            },
+                            {
+                                text: "Создаю дашборды с основными метриками",
+                                score: 2,
+                                feedback: "Хорошее понимание визуализации данных"
+                            },
+                            {
+                                text: "Разрабатываю интерактивные дашборды с drill-down",
+                                score: 3,
+                                feedback: "Отличное понимание интерактивной аналитики"
+                            },
+                            {
+                                text: "Создаю кастомные отчеты под каждого стейкхолдера",
+                                score: 4,
+                                feedback: "Превосходное понимание потребностей аудитории"
+                            },
+                            {
+                                text: "Внедряю AI-powered аналитическую платформу",
+                                score: 5,
+                                feedback: "Превосходное понимание современных решений"
+                            }
+                        ]
+                    }
+                ],
+                finalFeedback: {
+                    low: "Необходимо улучшить понимание аналитики в рекрутинге",
+                    medium: "Хорошее понимание базовых метрик, есть потенциал для роста",
+                    high: "Отличное понимание аналитики и современных подходов"
+                }
+            },
+            "Разработка/исполнение roadmap и проведение анализа": [
+                {
+                    title: "Анализ отказов",
+                    description: "Из 20 отказов после оффера:\n\n12 из-за зарплаты\n5 из-за локации\n3 по личным причинам\n\nПредложи 3 решения для снижения отказов с обоснованием",
+                    options: [
+                        {
+                            text: "1. Провести анализ рынка и скорректировать зарплатные предложения. 2. Рассмотреть возможность удаленной работы. 3. Улучшить процесс коммуникации с кандидатами.",
+                            score: 7,
+                            feedback: "Хорошие предложения, но можно было добавить более конкретные шаги и обоснование."
+                        },
+                        {
+                            text: "1. Провести анализ зарплатных вилок на рынке и скорректировать предложения (60% отказов). 2. Внедрить гибкий график и удаленную работу для решения проблемы локации (25% отказов). 3. Улучшить процесс коммуникации с кандидатами на этапе оффера, добавить больше информации о компании и команде (15% отказов).",
+                            score: 9,
+                            feedback: "Отличный анализ с конкретными решениями и процентным обоснованием."
+                        },
+                        {
+                            text: "1. Провести анализ зарплатных вилок и скорректировать предложения. 2. Рассмотреть возможность удаленной работы или гибкого графика. 3. Улучшить процесс коммуникации с кандидатами.",
+                            score: 8,
+                            feedback: "Хорошие предложения с обоснованием, но можно было добавить более конкретные шаги."
+                        }
+                    ]
+                },
+                {
+                    title: "A/B тестирование",
+                    description: "Проведи анализ двух версий вакансии:\n\nВариант А: CTR 4%, конверсия в интервью 15%\nВариант Б: CTR 6%, конверсия в интервью 10%\n\nОпредели более эффективный вариант и предложи гипотезы, почему",
+                    options: [
+                        {
+                            text: "Вариант Б более эффективен по CTR, но менее эффективен по конверсии. Возможно, в варианте Б более привлекательный заголовок, но менее информативное описание.",
+                            score: 7,
+                            feedback: "Хороший анализ, но можно было предложить более конкретные гипотезы и рекомендации."
+                        },
+                        {
+                            text: "Вариант Б имеет более высокий CTR (6% vs 4%), но более низкую конверсию в интервью (10% vs 15%). Гипотезы: 1) Вариант Б имеет более привлекательный заголовок, но менее подробное описание требований. 2) Вариант Б может привлекать более широкую аудиторию, но менее релевантную. Рекомендация: объединить сильные стороны обоих вариантов - привлекательный заголовок из Б и подробное описание из А.",
+                            score: 9,
+                            feedback: "Отличный анализ с конкретными гипотезами и рекомендацией."
+                        },
+                        {
+                            text: "Вариант Б более эффективен по CTR, но менее эффективен по конверсии. Гипотезы: 1) Вариант Б имеет более привлекательный заголовок. 2) Вариант Б может привлекать менее квалифицированных кандидатов. Рекомендация: проанализировать различия между вариантами и объединить их сильные стороны.",
+                            score: 8,
+                            feedback: "Хороший анализ с гипотезами и общей рекомендацией."
+                        }
+                    ]
+                },
+                {
+                    title: "Оптимизация процессов",
+                    description: "Проанализируй текущий процесс найма:\n\n1. Публикация вакансии (1 день)\n2. Сбор резюме (7 дней)\n3. Скрининг резюме (3 дня)\n4. Тестовое задание (5 дней)\n5. Интервью с HR (1 день)\n6. Интервью с менеджером (1 день)\n7. Техническое интервью (1 день)\n8. Оффер (3 дня)\n\nПредложи оптимизацию процесса для сокращения времени найма.",
+                    options: [
+                        {
+                            text: "Можно сократить время сбора резюме до 5 дней и время на тестовое задание до 3 дней. Общее время найма сократится на 6 дней.",
+                            score: 7,
+                            feedback: "Хорошие предложения, но можно было предложить более комплексную оптимизацию."
+                        },
+                        {
+                            text: "Оптимизация: 1) Параллельный процесс скрининга резюме и сбора новых (сокращение на 3 дня). 2) Внедрение автоматизированного тестирования вместо ручного (сокращение на 2 дня). 3) Объединение интервью с HR и менеджером (сокращение на 1 день). 4) Ускорение процесса оффера через автоматизацию (сокращение на 1 день). Итого: сокращение на 7 дней.",
+                            score: 9,
+                            feedback: "Отличный анализ с конкретными предложениями по оптимизации и расчетом экономии времени."
+                        },
+                        {
+                            text: "1) Сократить время сбора резюме до 5 дней. 2) Сократить время на тестовое задание до 3 дней. 3) Объединить интервью с HR и менеджером. 4) Ускорить процесс оффера. Общее сокращение времени: 7 дней.",
+                            score: 8,
+                            feedback: "Хорошие предложения по оптимизации с расчетом экономии времени."
+                        }
+                    ]
+                }
+            ],
+            "Использование LinkedIn и X-Ray запросов для сорсинга специалистов": [
+                {
+                    title: "X-Ray на LinkedIn",
+                    description: "Найди 10 Python-разработчиков в Берлине с опытом работы в стартапах (1-3 года), которые:\n\nУпоминают в профиле Flask или Django\nИмеют открытую к контакту страницу\nРаботали в компаниях с продуктовой разработкой\n\nОформи поисковый запрос с использованием операторов site: и логических операторов",
+                    type: "open",
+                    rubric: {
+                        criteria: [
+                            "Использование точных фраз и операторов (site:, AND, OR)",
+                            "Учет всех требований в запросе",
+                            "Логическая структура запроса",
+                            "Использование синонимов и альтернативных формулировок",
+                            "Оптимизация для получения релевантных результатов"
+                        ],
+                        scores: [
+                            {
+                                score: 0,
+                                description: "Отсутствие понимания принципов X-Ray поиска"
+                            },
+                            {
+                                score: 2,
+                                description: "Базовое понимание, но существенные ошибки в запросе"
+                            },
+                            {
+                                score: 4,
+                                description: "Правильное использование основных операторов, но неполный учет требований"
+                            },
+                            {
+                                score: 6,
+                                description: "Хороший запрос с учетом большинства требований"
+                            },
+                            {
+                                score: 8,
+                                description: "Отличный запрос с учетом всех требований и оптимизацией"
+                            },
+                            {
+                                score: 10,
+                                description: "Идеальный запрос с учетом всех нюансов и оптимальной структурой"
+                            }
+                        ]
+                    }
+                },
+                {
+                    title: "Boolean Search для FinTech",
+                    description: "Составь поисковый запрос для hh.ru, чтобы найти кандидатов на позицию DevOps Engineer с требованиями:\n\nЗнание Kubernetes и AWS\nОпыт работы в банках или FinTech-компаниях\nНе рассматривает офисный формат работы\n\nИспользуй операторы \"И\", \"ИЛИ\", \"НЕ\", кавычки и скобки",
+                    type: "open",
+                    rubric: {
+                        criteria: [
+                            "Использование всех необходимых операторов (AND, OR, NOT)",
+                            "Правильное использование кавычек и скобок",
+                            "Учет всех требований в запросе",
+                            "Использование синонимов и альтернативных формулировок",
+                            "Оптимизация для исключения нерелевантных результатов"
+                        ],
+                        scores: [
+                            {
+                                score: 0,
+                                description: "Отсутствие понимания принципов boolean search"
+                            },
+                            {
+                                score: 2,
+                                description: "Базовое понимание, но существенные ошибки в запросе"
+                            },
+                            {
+                                score: 4,
+                                description: "Правильное использование основных операторов, но неполный учет требований"
+                            },
+                            {
+                                score: 6,
+                                description: "Хороший запрос с учетом большинства требований"
+                            },
+                            {
+                                score: 8,
+                                description: "Отличный запрос с учетом всех требований и оптимизацией"
+                            },
+                            {
+                                score: 10,
+                                description: "Идеальный запрос с учетом всех нюансов и оптимальной структурой"
+                            }
+                        ]
+                    }
+                },
+                {
+                    title: "GitHub Sourcing",
+                    description: "Найди 5 активных контрибьюторов в open-source проектах:\n\nС опытом работы с TensorFlow\nС коммитами за последние 3 месяца\nИз Восточной Европы\n\nУкажи параметры поиска и ключевые слова для GitHub Advanced Search",
+                    type: "open",
+                    rubric: {
+                        criteria: [
+                            "Использование всех необходимых параметров GitHub Advanced Search",
+                            "Учет временных ограничений",
+                            "Учет географических ограничений",
+                            "Использование дополнительных параметров для уточнения результатов",
+                            "Оптимизация запроса для получения наиболее релевантных результатов"
+                        ],
+                        scores: [
+                            {
+                                score: 0,
+                                description: "Отсутствие понимания принципов GitHub Advanced Search"
+                            },
+                            {
+                                score: 2,
+                                description: "Базовое понимание, но существенные ошибки в запросе"
+                            },
+                            {
+                                score: 4,
+                                description: "Правильное использование основных параметров, но неполный учет требований"
+                            },
+                            {
+                                score: 6,
+                                description: "Хороший запрос с учетом большинства требований"
+                            },
+                            {
+                                score: 8,
+                                description: "Отличный запрос с учетом всех требований и оптимизацией"
+                            },
+                            {
+                                score: 10,
+                                description: "Идеальный запрос с учетом всех нюансов и оптимальной структурой"
+                            }
+                        ]
+                    }
+                }
+            ],
+            "Знание технических и технологических специфик в ИТ и digital направлениях": [
+                {
+                    title: "Скрытый хантинг",
+                    description: "Найди контакты Tech Lead в компании \"XYZ Corp\" (вымышленная):\n\nЧерез публичные источники (без LinkedIn Premium)\nС подтверждённым опытом управления командой 10+ человек\n\nОпиши цепочку действий и источники для поиска",
+                    options: [
+                        {
+                            text: "1. Поиск в Google по запросу \"XYZ Corp Tech Lead\". 2. Поиск в Twitter по хештегам компании. 3. Поиск в GitHub по репозиториям компании.",
+                            score: 7,
+                            feedback: "Хороший план, но можно было предложить более комплексный подход и дополнительные источники."
+                        },
+                        {
+                            text: "1. Поиск в Google по запросу \"XYZ Corp Tech Lead\" \"team lead\" \"10+ people\". 2. Поиск в Twitter по хештегам компании и должностям. 3. Поиск в GitHub по репозиториям компании и контрибьюторам. 4. Поиск в блогах и технических статьях компании. 5. Поиск в сообществах разработчиков (Stack Overflow, Reddit). 6. Анализ публичных выступлений сотрудников на конференциях. 7. Поиск в открытых базах данных о компаниях и сотрудниках.",
+                            score: 9,
+                            feedback: "Отличный план с использованием множества источников и учетом всех требований."
+                        },
+                        {
+                            text: "1. Поиск в Google по запросу \"XYZ Corp Tech Lead\". 2. Поиск в Twitter по хештегам компании. 3. Поиск в GitHub по репозиториям компании. 4. Поиск в блогах и технических статьях компании. 5. Поиск в сообществах разработчиков.",
+                            score: 8,
+                            feedback: "Хороший план с использованием нескольких источников."
+                        }
+                    ]
+                },
+                {
+                    title: "Нишевый поиск",
+                    description: "Найди UX-дизайнеров в геймдеве:\n\nС портфолио в стиле dark fantasy\nУчаствовавших в проектах для PlayStation\nС опытом работы с Unreal Engine\n\nСоставь список площадок и поисковых запросов",
+                    options: [
+                        {
+                            text: "1. ArtStation: \"UX designer\" \"dark fantasy\" \"PlayStation\". 2. Behance: \"UX designer\" \"game\" \"dark fantasy\". 3. LinkedIn: \"UX designer\" \"game\" \"Unreal Engine\".",
+                            score: 7,
+                            feedback: "Хороший список площадок, но можно было предложить более специфичные запросы и дополнительные источники."
+                        },
+                        {
+                            text: "1. ArtStation: \"UX designer\" \"dark fantasy\" \"PlayStation\" \"Unreal Engine\". 2. Behance: \"UX designer\" \"game\" \"dark fantasy\" \"PlayStation\". 3. LinkedIn: \"UX designer\" \"game\" \"Unreal Engine\" \"dark fantasy\". 4. Dribbble: \"UX designer\" \"game\" \"dark fantasy\". 5. GameDev.ru: поиск по форуму. 6. GDC Vault: поиск по докладам. 7. Игровые конференции: списки спикеров и участников.",
+                            score: 9,
+                            feedback: "Отличный список площадок и запросов с учетом всех требований и использованием специфичных для геймдева источников."
+                        },
+                        {
+                            text: "1. ArtStation: \"UX designer\" \"dark fantasy\" \"PlayStation\". 2. Behance: \"UX designer\" \"game\" \"dark fantasy\". 3. LinkedIn: \"UX designer\" \"game\" \"Unreal Engine\". 4. Dribbble: \"UX designer\" \"game\". 5. GameDev.ru: поиск по форуму.",
+                            score: 8,
+                            feedback: "Хороший список площадок и запросов с использованием специфичных для геймдева источников."
+                        }
+                    ]
+                },
+                {
+                    title: "Технический рекрутинг",
+                    description: "Составь план поиска Senior Java Developer с требованиями:\n\nОпыт работы с микросервисной архитектурой\nЗнание Spring Boot и Kubernetes\nОпыт работы в высоконагруженных системах\n\nОпиши стратегию поиска и ключевые слова для различных платформ",
+                    options: [
+                        {
+                            text: "1. LinkedIn: \"Senior Java Developer\" \"microservices\" \"Spring Boot\" \"Kubernetes\". 2. GitHub: поиск по репозиториям с микросервисами. 3. Stack Overflow: поиск по тегам и ответам.",
+                            score: 7,
+                            feedback: "Хороший план, но можно было предложить более комплексный подход и дополнительные источники."
+                        },
+                        {
+                            text: "1. LinkedIn: \"Senior Java Developer\" \"microservices\" \"Spring Boot\" \"Kubernetes\" \"high load\". 2. GitHub: поиск по репозиториям с микросервисами и Kubernetes. 3. Stack Overflow: поиск по тегам java, spring-boot, kubernetes, microservices. 4. Технические блоги и статьи: поиск авторов с опытом в микросервисах. 5. Конференции: списки спикеров по Java и микросервисам. 6. Сообщества разработчиков: Java User Groups, Kubernetes Community. 7. Специализированные job-сайты: Stack Overflow Jobs, AngelList.",
+                            score: 9,
+                            feedback: "Отличный план с использованием множества источников и учетом всех требований."
+                        },
+                        {
+                            text: "1. LinkedIn: \"Senior Java Developer\" \"microservices\" \"Spring Boot\" \"Kubernetes\". 2. GitHub: поиск по репозиториям с микросервисами. 3. Stack Overflow: поиск по тегам java, spring-boot, kubernetes. 4. Технические блоги и статьи. 5. Конференции: списки спикеров.",
+                            score: 8,
+                            feedback: "Хороший план с использованием нескольких источников и учетом всех требований."
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // Функция для открытия модального окна с тестовым заданием
+        function openTestTaskModal(skillId, skillTitle) {
+            console.log('Opening test task modal for:', { skillId, skillTitle });
+            // Определяем тип задания на основе skillTitle
+            if (skillTitle === "Ведение и формирование аналитических данных") {
+                console.log('Opening analytics task');
+                openAnalyticsTask(skillId);
+            } else if (skillTitle.includes('roadmap')) {
+                console.log('Opening roadmap task');
+                openRoadmapTask(skillId);
+            } else if (skillTitle.includes('сорсинг')) {
+                console.log('Opening sourcing task');
+                openSourcingTask(skillId);
+            } else if (skillTitle.includes('технических')) {
+                console.log('Opening tech knowledge task');
+                openTechKnowledgeTask(skillId);
+            } else {
+                console.log('No matching task type found for:', skillTitle);
+            }
+        }
+
+        // Функция для аналитического задания
+        function openAnalyticsTask(skillId) {
+            const analyticsModal = new bootstrap.Modal(document.getElementById('analyticsTaskModal'));
+            const modalTitle = document.querySelector('#analyticsTaskModal .modal-title');
+            const modalBody = document.querySelector('#analyticsTaskModal .modal-body');
+            const submitButton = document.querySelector('#analyticsTaskModal #analyticsTaskSubmit');
+            
+            modalTitle.textContent = 'Тестовое задание: Аналитические данные';
+            
+            let currentStep = 0;
+            let totalScore = 0;
+            
+            const steps = [
+                {
+                    question: 'Какие базовые метрики вы используете для оценки эффективности рекрутинга?',
+                    correctAnswer: 'Время до найма (Time to Hire) и стоимость найма (Cost per Hire)',
+                    options: [
+                        'Только количество откликов на вакансию',
+                        'Время до найма (Time to Hire) и стоимость найма (Cost per Hire)',
+                        'Только качество найма (Quality of Hire)',
+                        'Только удовлетворенность кандидатов'
+                    ]
+                },
+                {
+                    question: 'Как вы оцениваете качество найма (Quality of Hire)?',
+                    correctAnswer: 'Через оценку производительности, удержания и адаптации нового сотрудника',
+                    options: [
+                        'Только по результатам испытательного срока',
+                        'Через оценку производительности, удержания и адаптации нового сотрудника',
+                        'Только по отзывам руководителя',
+                        'Только по скорости выхода на работу'
+                    ]
+                },
+                {
+                    question: 'Какие метрики используются для оценки эффективности источников найма?',
+                    correctAnswer: 'Конверсия кандидатов, стоимость найма, качество найма и время до найма',
+                    options: [
+                        'Только количество откликов с каждого источника',
+                        'Только стоимость найма с каждого источника',
+                        'Конверсия кандидатов, стоимость найма, качество найма и время до найма',
+                        'Только время до найма с каждого источника'
+                    ]
+                },
+                {
+                    question: 'Как вы анализируете эффективность процесса найма?',
+                    correctAnswer: 'Через анализ воронки найма, выявление узких мест и оптимизацию каждого этапа',
+                    options: [
+                        'Только по общему времени найма',
+                        'Только по стоимости найма',
+                        'Через анализ воронки найма, выявление узких мест и оптимизацию каждого этапа',
+                        'Только по количеству закрытых позиций'
+                    ]
+                },
+                {
+                    question: 'Какие предиктивные метрики вы используете для прогнозирования успешности найма?',
+                    correctAnswer: 'Анализ исторических данных, трендов рынка и корреляций между различными факторами',
+                    options: [
+                        'Только исторические данные по времени найма',
+                        'Только данные по стоимости найма',
+                        'Анализ исторических данных, трендов рынка и корреляций между различными факторами',
+                        'Только данные по источникам найма'
+                    ]
+                }
+            ];
+            
+            function showStep(stepIndex) {
+                const step = steps[stepIndex];
+                
+                modalBody.innerHTML = `
+                    <div class="test-task">
+                        <div class="progress mb-3">
+                            <div class="progress-bar" role="progressbar" style="width: ${(stepIndex / steps.length) * 100}%" 
+                                 aria-valuenow="${stepIndex}" aria-valuemin="0" aria-valuemax="${steps.length}">
+                                Вопрос ${stepIndex + 1} из ${steps.length}
+                            </div>
+                        </div>
+                        <h5>${step.question}</h5>
+                        
+                        <div class="test-task-options">
+                            ${step.options.map((option, index) => `
+                                <div class="test-task-option" data-index="${index}">
+                                    ${option}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+                
+                const options = modalBody.querySelectorAll('.test-task-option');
+                options.forEach(option => {
+                    option.addEventListener('click', function() {
+                        options.forEach(opt => opt.classList.remove('selected'));
+                        this.classList.add('selected');
+                    });
+                });
+                
+                // Обновляем кнопку только если тест не завершен
+                if (stepIndex < steps.length) {
+                    submitButton.innerHTML = '<i class="bi bi-check-circle"></i> Ответить';
+                    submitButton.className = 'btn btn-primary';
+                    submitButton.onclick = function() {
+                        const selectedOption = modalBody.querySelector('.test-task-option.selected');
+                        if (!selectedOption) {
+                            alert('Пожалуйста, выберите ответ');
+                            return;
+                        }
+                        
+                        const selectedAnswer = selectedOption.textContent.trim();
+                        const isCorrect = selectedAnswer === step.correctAnswer;
+                        
+                        if (isCorrect) {
+                            totalScore += 2;
+                            if (stepIndex < steps.length - 1) {
+                                currentStep++;
+                                showStep(currentStep);
+                            } else {
+                                finishTest();
+                            }
+                        } else {
+                            finishTest();
+                        }
+                    };
+                }
+            }
+            
+            function finishTest() {
+                // Очищаем все содержимое модального окна
+                modalBody.innerHTML = '';
+                
+                // Создаем новый контейнер для результатов
+                const resultsContainer = document.createElement('div');
+                resultsContainer.className = 'test-task final-results';
+                
+                // Добавляем прогресс-бар
+                const progressBar = document.createElement('div');
+                progressBar.className = 'progress mb-3';
+                progressBar.innerHTML = `
+                    <div class="progress-bar bg-success" role="progressbar" style="width: 100%" 
+                         aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                        Тест завершен
+                    </div>
+                `;
+                
+                // Добавляем заголовок
+                const title = document.createElement('h5');
+                title.textContent = 'Результаты тестирования';
+                
+                // Добавляем блок с результатами
+                const scoreSummary = document.createElement('div');
+                scoreSummary.className = 'score-summary';
+                scoreSummary.innerHTML = `
+                    <h6>Итоговая оценка: ${totalScore}/10</h6>
+                    <p class="score-explanation">
+                        ${totalScore <= 2 ? 'Начальный уровень: требуется значительное улучшение навыков аналитики' :
+                          totalScore <= 4 ? 'Базовый уровень: есть понимание основных метрик, но нужна практика' :
+                          totalScore <= 6 ? 'Средний уровень: хорошее понимание аналитики, есть потенциал для роста' :
+                          totalScore <= 8 ? 'Продвинутый уровень: отличное понимание аналитики и современных подходов' :
+                          'Экспертный уровень: превосходное владение аналитическими навыками'}
+                    </p>
+                `;
+                
+                // Собираем все элементы
+                resultsContainer.appendChild(progressBar);
+                resultsContainer.appendChild(title);
+                resultsContainer.appendChild(scoreSummary);
+                
+                // Добавляем результаты в модальное окно
+                modalBody.appendChild(resultsContainer);
+                
+                // Обновляем оценку навыка
+                updateSkillScore(skillId, totalScore);
+                
+                // Настраиваем кнопки в футере модального окна
+                const modalFooter = document.querySelector('#analyticsTaskModal .modal-footer');
+                const closeButton = modalFooter.querySelector('button[data-bs-dismiss="modal"]');
+                const submitButton = modalFooter.querySelector('#analyticsTaskSubmit');
+                
+                // Показываем только кнопку закрытия и скрываем кнопку ответить
+                closeButton.style.display = 'block';
+                submitButton.style.display = 'none';
+                
+                // Обновляем обработчик закрытия
+                closeButton.onclick = function() {
+                    analyticsModal.hide();
+                };
+                
+                // Удаляем все обработчики событий с кнопки ответить
+                submitButton.replaceWith(submitButton.cloneNode(true));
+            }
+            
+            showStep(currentStep);
+            analyticsModal.show();
+        }
+
+        // Функция для обновления оценки навыка
+        function updateSkillScore(skillId, score) {
+            const rangeInput = document.getElementById(`skill${skillId}Range`);
+            const valueDisplay = document.getElementById(`skill${skillId}Value`);
+            const descriptionDisplay = document.getElementById(`skill${skillId}Description`);
+            
+            if (rangeInput && valueDisplay && descriptionDisplay) {
+                rangeInput.value = score;
+                valueDisplay.textContent = score;
+                updateGradeIndicators(skills.find(s => s.id === parseInt(skillId)), score);
+                updateSkillDescription(skills.find(s => s.id === parseInt(skillId)), score);
+                // Обновляем общий счет
+                updateTotalScore();
+            }
+        }
+
+        // Функция для обновления общего количества баллов
+        function updateTotalScore() {
+            let totalScore = 0;
+            let totalSkills = 0;
+            
+            skills.forEach(skill => {
+                const rangeInput = document.getElementById(`skill${skill.id}Range`);
+                if (rangeInput) {
+                    totalScore += parseInt(rangeInput.value);
+                    totalSkills++;
+                }
+            });
+            
+            const averageScore = totalSkills > 0 ? Math.round(totalScore / totalSkills) : 0;
+            
+            // Обновляем отображение общего счета
+            const resultGrade = document.getElementById('result-grade');
+            const resultDescription = document.getElementById('result-description');
+            
+            if (resultGrade && resultDescription) {
+                resultGrade.textContent = `Средняя оценка: ${averageScore}/10`;
+                resultDescription.textContent = getScoreDescription(averageScore);
+            }
+        }
+
+        // Функция для получения описания оценки
+        function getScoreDescription(score) {
+            if (score >= 9) return "Отличный результат! Кандидат демонстрирует высокий уровень компетенций.";
+            if (score >= 7) return "Хороший результат. Кандидат показывает solid уровень знаний и навыков.";
+            if (score >= 5) return "Удовлетворительный результат. Есть области для улучшения.";
+            return "Требуется дополнительное обучение и развитие навыков.";
+        }
+
+        // Вспомогательные функции
+        function evaluateSourcingAnswer(answer) {
+            // Здесь будет логика оценки X-Ray запроса
+            // Пока возвращаем случайную оценку для демонстрации
+            return Math.floor(Math.random() * 11);
+        }
+
+        function analyzeSourcingAnswer(answer) {
+            // Здесь будет логика анализа X-Ray запроса
+            return "Ваш запрос содержит основные элементы X-Ray поиска. Рекомендуется добавить больше специфичных параметров для более точного поиска.";
+        }
+
+        function evaluateTechGroup(group) {
+            // Здесь будет логика оценки правильности распределения элементов по группам
+            // Пока возвращаем случайную оценку для демонстрации
+            return Math.floor(Math.random() * 6);
+        }
+
+        function initializeDragAndDrop(group) {
+            const draggableItems = document.querySelectorAll('.draggable-item');
+            const dropZones = document.querySelectorAll('.drop-zone');
+            
+            draggableItems.forEach(item => {
+                item.addEventListener('dragstart', function(e) {
+                    e.dataTransfer.setData('text/plain', this.getAttribute('data-index'));
+                    this.classList.add('dragging');
+                });
+                
+                item.addEventListener('dragend', function() {
+                    this.classList.remove('dragging');
+                });
+            });
+            
+            dropZones.forEach(zone => {
+                zone.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                    const draggable = document.querySelector('.dragging');
+                    zone.appendChild(draggable);
+                });
+            });
+        }
+
+        // Данные для аналитического задания
+        const analyticsTask = {
+            steps: [
+                {
+                    question: "Какие метрики вы бы использовали для оценки эффективности процесса найма?",
+                    options: [
+                        {
+                            text: "Только время до найма (Time to Hire)",
+                            score: 1,
+                            feedback: "Этот подход слишком узкий. Время до найма - важная метрика, но не единственная."
+                        },
+                        {
+                            text: "Время до найма и стоимость найма (Cost per Hire)",
+                            score: 2,
+                            feedback: "Хороший базовый набор метрик, но можно добавить больше параметров для комплексной оценки."
+                        },
+                        {
+                            text: "Время до найма, стоимость найма и качество найма (Quality of Hire)",
+                            score: 3,
+                            feedback: "Хороший набор метрик, но можно улучшить, добавив метрики удержания и удовлетворенности."
+                        },
+                        {
+                            text: "Комплексный набор метрик: время до найма, стоимость найма, качество найма, удержание и удовлетворенность",
+                            score: 4,
+                            feedback: "Отличный подход с учетом всех важных аспектов найма."
+                        },
+                        {
+                            text: "Комплексный набор метрик + прогнозная аналитика и A/B тестирование подходов к найму",
+                            score: 5,
+                            feedback: "Превосходный подход с использованием современных методов аналитики и оптимизации."
+                        }
+                    ]
+                },
+                {
+                    question: "Как бы вы анализировали эффективность различных источников найма?",
+                    options: [
+                        {
+                            text: "По количеству откликов с каждого источника",
+                            score: 1,
+                            feedback: "Слишком простой подход, не учитывающий качество кандидатов."
+                        },
+                        {
+                            text: "По количеству откликов и прохождению первичного скрининга",
+                            score: 2,
+                            feedback: "Лучше, но все еще не учитывает конечный результат найма."
+                        },
+                        {
+                            text: "По количеству откликов, прохождению скрининга и выходам на интервью",
+                            score: 3,
+                            feedback: "Хороший подход, но можно добавить анализ качества найма."
+                        },
+                        {
+                            text: "Комплексный анализ: отклики, скрининг, интервью, найм и удержание",
+                            score: 4,
+                            feedback: "Отличный подход с учетом полного цикла найма."
+                        },
+                        {
+                            text: "Комплексный анализ + ROI по каждому источнику и прогнозная аналитика",
+                            score: 5,
+                            feedback: "Превосходный подход с учетом экономической эффективности и прогнозирования."
+                        }
+                    ]
+                },
+                {
+                    question: "Как бы вы использовали данные для оптимизации процесса найма?",
+                    options: [
+                        {
+                            text: "Анализ времени на каждом этапе найма",
+                            score: 1,
+                            feedback: "Базовый подход, но можно сделать более глубокий анализ."
+                        },
+                        {
+                            text: "Анализ времени и выявление узких мест в процессе",
+                            score: 2,
+                            feedback: "Хороший подход, но можно добавить анализ причин задержек."
+                        },
+                        {
+                            text: "Анализ времени, узких мест и причин задержек",
+                            score: 3,
+                            feedback: "Хороший подход, но можно добавить анализ эффективности решений."
+                        },
+                        {
+                            text: "Комплексный анализ процесса с предложением конкретных улучшений",
+                            score: 4,
+                            feedback: "Отличный подход с практическими рекомендациями."
+                        },
+                        {
+                            text: "Комплексный анализ + A/B тестирование улучшений и прогнозная аналитика",
+                            score: 5,
+                            feedback: "Превосходный подход с использованием современных методов оптимизации."
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // Данные для задания по roadmap
+        const roadmapTask = {
+            questions: [
+                {
+                    question: "Как бы вы структурировали процесс разработки roadmap для найма на квартал?",
+                    options: [
+                        { text: "Создать статичный план на весь квартал", score: 2 },
+                        { text: "Разработать план с ежемесячной корректировкой", score: 4 },
+                        { text: "Использовать Agile-подход с двухнедельными итерациями", score: 5 },
+                        { text: "Планировать только на месяц вперед", score: 3 },
+                        { text: "Создать гибкий план с возможностью быстрой адаптации", score: 4 }
+                    ]
+                },
+                {
+                    question: "Какие метрики вы бы использовали для анализа эффективности roadmap?",
+                    options: [
+                        { text: "Только процент выполнения плана", score: 2 },
+                        { text: "Комбинация количественных и качественных показателей", score: 5 },
+                        { text: "Только время закрытия позиций", score: 3 },
+                        { text: "Стоимость найма и качество кандидатов", score: 4 },
+                        { text: "Удовлетворенность менеджеров", score: 3 }
+                    ]
+                },
+                {
+                    question: "Как бы вы интегрировали анализ данных в процесс разработки roadmap?",
+                    options: [
+                        { text: "Использую только исторические данные", score: 2 },
+                        { text: "Применять предиктивную аналитику", score: 5 },
+                        { text: "Анализировать текущие тренды рынка", score: 4 },
+                        { text: "Учитывать только внутренние метрики", score: 3 },
+                        { text: "Комбинировать различные источники данных", score: 4 }
+                    ]
+                }
+            ]
+        };
+
+        // Данные для задания по сорсингу
+        const sourcingTask = {
+            title: "Составление X-Ray запроса",
+            description: "Составьте X-Ray запрос для поиска Senior Python разработчика с опытом работы в fintech:",
+            example: `site:linkedin.com/in/ AND "Python Developer" AND (Django OR "Django Framework") AND ("microservices" OR "micro-service" OR "micro service") AND ("5 years" OR "5+ years" OR "five years") AND -job -jobs -recruiter -recruitment -hiring`
+        };
+
+        // Данные для задания по техническим знаниям
+        const techTask = {
+            groups: [
+                {
+                    title: "Backend технологии",
+                    description: "Распределите технологии по соответствующим категориям",
+                    categories: ["Python", "Java", "Node.js", "Go"],
+                    items: [
+                        { text: "Django", category: 0 },
+                        { text: "Spring Boot", category: 1 },
+                        { text: "Express.js", category: 2 },
+                        { text: "Gin", category: 3 },
+                        { text: "Flask", category: 0 },
+                        { text: "Hibernate", category: 1 },
+                        { text: "NestJS", category: 2 },
+                        { text: "Echo", category: 3 }
+                    ]
+                },
+                {
+                    title: "Frontend технологии",
+                    description: "Распределите фреймворки и библиотеки по соответствующим категориям",
+                    categories: ["React", "Vue", "Angular", "Svelte"],
+                    items: [
+                        { text: "Redux", category: 0 },
+                        { text: "Vuex", category: 1 },
+                        { text: "RxJS", category: 2 },
+                        { text: "Svelte Store", category: 3 },
+                        { text: "Next.js", category: 0 },
+                        { text: "Nuxt.js", category: 1 },
+                        { text: "NgRx", category: 2 },
+                        { text: "SvelteKit", category: 3 }
+                    ]
+                },
+                {
+                    title: "Базы данных",
+                    description: "Распределите базы данных по типам",
+                    categories: ["SQL", "NoSQL", "NewSQL", "Graph"],
+                    items: [
+                        { text: "PostgreSQL", category: 0 },
+                        { text: "MongoDB", category: 1 },
+                        { text: "CockroachDB", category: 2 },
+                        { text: "Neo4j", category: 3 },
+                        { text: "MySQL", category: 0 },
+                        { text: "Cassandra", category: 1 },
+                        { text: "TiDB", category: 2 },
+                        { text: "ArangoDB", category: 3 }
+                    ]
+                }
+            ]
+        };
+
+        // Функция для получения текстового описания оценки
+        function getScoreFeedback(score) {
+            if (score >= 9) return "Отличный результат! Вы демонстрируете глубокое понимание аналитики в рекрутинге.";
+            if (score >= 7) return "Хороший результат! Вы хорошо понимаете основы аналитики в рекрутинге.";
+            if (score >= 5) return "Удовлетворительный результат. Есть области для улучшения.";
+            return "Требуется дополнительное обучение в области аналитики рекрутинга.";
+        }
+
+        // Функция для открытия задания по roadmap
+        function openRoadmapTask(skillId) {
+            const roadmapModal = new bootstrap.Modal(document.getElementById('roadmapTaskModal'));
+            const modalTitle = document.querySelector('#roadmapTaskModal .modal-title');
+            const modalBody = document.querySelector('#roadmapTaskModal .modal-body');
+            const submitButton = document.querySelector('#roadmapTaskModal #roadmapTaskSubmit');
+            
+            modalTitle.textContent = 'Тестовое задание: Разработка roadmap';
+            
+            let currentQuestion = 0;
+            const questions = [
+                {
+                    question: 'Как вы структурируете процесс разработки roadmap?',
+                    options: [
+                        { text: 'Использую только статический план на год вперед', score: 1, feedback: 'Статический план не учитывает изменения рынка и потребностей.' },
+                        { text: 'Разбиваю на кварталы с возможностью корректировки', score: 2, feedback: 'Хороший базовый подход с некоторой гибкостью.' },
+                        { text: 'Применяю Agile-подход с регулярными итерациями', score: 3, feedback: 'Хороший подход с адаптивностью.' },
+                        { text: 'Комбинирую долгосрочное планирование с гибкими итерациями', score: 4, feedback: 'Отличный подход, балансирующий стратегию и тактику.' },
+                        { text: 'Использую адаптивный подход с учетом обратной связи', score: 5, feedback: 'Превосходный подход с максимальной гибкостью и учетом обратной связи.' }
+                    ]
+                },
+                {
+                    question: 'Какие метрики вы используете для оценки эффективности roadmap?',
+                    options: [
+                        { text: 'Только количественные показатели', score: 1, feedback: 'Недостаточно комплексный подход к оценке.' },
+                        { text: 'Комбинация количественных и качественных метрик', score: 2, feedback: 'Хороший базовый подход к оценке.' },
+                        { text: 'Система KPI с регулярным мониторингом', score: 3, feedback: 'Хороший подход с систематическим мониторингом.' },
+                        { text: 'Комплексная система метрик с анализом трендов', score: 4, feedback: 'Отличный подход с глубоким анализом.' },
+                        { text: 'Многоуровневая система оценки с предиктивной аналитикой', score: 5, feedback: 'Превосходный подход с использованием передовых методов анализа.' }
+                    ]
+                },
+                {
+                    question: 'Как вы интегрируете анализ данных в процесс разработки roadmap?',
+                    options: [
+                        { text: 'Использую только исторические данные', score: 1, feedback: 'Недостаточно комплексный подход к анализу данных.' },
+                        { text: 'Анализирую текущие тренды и паттерны', score: 2, feedback: 'Хороший базовый подход к анализу.' },
+                        { text: 'Применяю предиктивную аналитику', score: 3, feedback: 'Хороший подход с использованием современных методов.' },
+                        { text: 'Комбинирую различные источники данных', score: 4, feedback: 'Отличный подход с комплексным анализом.' },
+                        { text: 'Использую комплексный подход с машинным обучением', score: 5, feedback: 'Превосходный подход с использованием передовых технологий.' }
+                    ]
+                }
+            ];
+            
+            let totalScore = 0;
+            let userAnswers = [];
+            
+            function showQuestion(questionIndex, showResults = false) {
+                const question = questions[questionIndex];
+                
+                if (showResults) {
+                    const selectedOption = modalBody.querySelector('.test-task-option.selected');
+                    const optionIndex = parseInt(selectedOption.getAttribute('data-index'));
+                    const selectedAnswer = question.options[optionIndex];
+                    
+                    userAnswers[questionIndex] = {
+                        question: question.question,
+                        answer: selectedAnswer.text,
+                        score: selectedAnswer.score,
+                        feedback: selectedAnswer.feedback
+                    };
+                    
+                    modalBody.innerHTML = `
+                        <div class="test-task">
+                            <div class="step-indicator">Вопрос ${questionIndex + 1} из ${questions.length}</div>
+                            <h5>${question.question}</h5>
+                            
+                            <div class="test-task-result show">
+                                <div class="result-section">
+                                    <h6>Ваш ответ:</h6>
+                                    <p>${selectedAnswer.text}</p>
+                                </div>
+                                
+                                <div class="result-section">
+                                    <h6>Правильный ответ:</h6>
+                                    <p>${question.options.find(opt => opt.score === 5).text}</p>
+                                </div>
+                                
+                                <div class="result-section">
+                                    <h6>Анализ ответа:</h6>
+                                    <p>${selectedAnswer.feedback}</p>
+                                </div>
+                                
+                                <div class="result-section">
+                                    <h6>Оценка за этот вопрос:</h6>
+                                    <p>${selectedAnswer.score} из 5 баллов</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    submitButton.textContent = questionIndex === questions.length - 1 ? 'Завершить' : 'Следующий вопрос';
+                    submitButton.onclick = function() {
+                        if (questionIndex < questions.length - 1) {
+                            currentQuestion++;
+                            showQuestion(currentQuestion);
+                        } else {
+                            const finalScore = Math.round((totalScore / (questions.length * 5)) * 10);
+                            
+                            modalBody.innerHTML = `
+                                <div class="test-task">
+                                    <div class="final-results">
+                                        <h5>Результаты тестирования</h5>
+                                        
+                                        <div class="score-summary">
+                                            <h6>Итоговая оценка: ${finalScore}/10</h6>
+                                            <p class="score-explanation">
+                                                ${finalScore <= 3 ? 'Начальный уровень: требуется значительное улучшение навыков разработки roadmap' :
+                                                  finalScore <= 5 ? 'Базовый уровень: есть понимание основных принципов, но нужна практика' :
+                                                  finalScore <= 7 ? 'Средний уровень: хорошее понимание процесса разработки roadmap' :
+                                                  finalScore <= 9 ? 'Продвинутый уровень: отличное понимание и применение современных подходов' :
+                                                  'Экспертный уровень: превосходное владение навыками разработки roadmap'}
+                                            </p>
+                                        </div>
+                                        
+                                        <div class="answers-summary">
+                                            <h6>Детальный анализ ответов:</h6>
+                                            ${userAnswers.map((answer, index) => `
+                                                <div class="answer-item">
+                                                    <p class="question">${index + 1}. ${answer.question}</p>
+                                                    <p class="answer">Ваш ответ: ${answer.answer}</p>
+                                                    <p class="score">Балл: ${answer.score}/5</p>
+                                                    <p class="feedback">${answer.feedback}</p>
+                                                </div>
+                                            `).join('')}
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                            
+                            updateSkillScore(skillId, finalScore);
+                            
+                            submitButton.textContent = 'Закрыть';
+                            submitButton.onclick = function() {
+                                roadmapModal.hide();
+                            };
+                        }
+                    };
+                } else {
+                    modalBody.innerHTML = `
+                        <div class="test-task">
+                            <div class="step-indicator">Вопрос ${questionIndex + 1} из ${questions.length}</div>
+                            <h5>${question.question}</h5>
+                            
+                            <div class="test-task-options">
+                                ${question.options.map((option, index) => `
+                                    <div class="test-task-option" data-index="${index}">
+                                        ${option.text}
+                                    </div>
+                                `).join('')}
+                            </div>
+                            
+                            <div class="test-task-result">
+                                <div class="test-task-feedback" id="testTaskFeedback"></div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    const options = modalBody.querySelectorAll('.test-task-option');
+                    options.forEach(option => {
+                        option.addEventListener('click', function() {
+                            options.forEach(opt => opt.classList.remove('selected'));
+                            this.classList.add('selected');
+                        });
+                    });
+                    
+                    submitButton.textContent = 'Ответить';
+                    submitButton.onclick = function() {
+                        const selectedOption = modalBody.querySelector('.test-task-option.selected');
+                        if (!selectedOption) {
+                            alert('Пожалуйста, выберите ответ');
+                            return;
+                        }
+                        
+                        const optionIndex = parseInt(selectedOption.getAttribute('data-index'));
+                        totalScore += question.options[optionIndex].score;
+                        
+                        showQuestion(questionIndex, true);
+                    };
+                }
+            }
+            
+            showQuestion(currentQuestion);
+            roadmapModal.show();
+        }
+
+        // Функция для получения текстового описания оценки по roadmap
+        function getRoadmapScoreFeedback(percentage) {
+            if (percentage >= 80) {
+                return `
+                    <div class="alert alert-success">
+                        <h5>Отличный результат!</h5>
+                        <p>Вы демонстрируете глубокое понимание процесса разработки и анализа roadmap. 
+                        Ваши ответы показывают комплексный подход к планированию и использованию данных.</p>
+                    </div>
+                `;
+            } else if (percentage >= 60) {
+                return `
+                    <div class="alert alert-info">
+                        <h5>Хороший результат</h5>
+                        <p>Вы показываете solid понимание основных принципов работы с roadmap. 
+                        Есть возможности для улучшения в области интеграции анализа данных и использования современных подходов.</p>
+                    </div>
+                `;
+            } else {
+                return `
+                    <div class="alert alert-warning">
+                        <h5>Требуется улучшение</h5>
+                        <p>Рекомендуется углубить знания в области разработки roadmap и анализа данных. 
+                        Обратите внимание на современные методологии и инструменты аналитики.</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Функция для открытия задания по сорсингу
+        function openSourcingTask(skillId) {
+            const sourcingModal = new bootstrap.Modal(document.getElementById('sourcingTaskModal'));
+            const modalTitle = document.querySelector('#sourcingTaskModal .modal-title');
+            const modalBody = document.querySelector('#sourcingTaskModal .modal-body');
+            const submitButton = document.querySelector('#sourcingTaskModal #sourcingTaskSubmit');
+            
+            modalTitle.textContent = 'Тестовое задание: X-Ray поиск';
+            
+            // Создаем контент для задания
+            modalBody.innerHTML = `
+                <div class="test-task">
+                    <div class="task-description mb-4">
+                        <h5>Задание:</h5>
+                        <p>Составьте X-Ray запрос для поиска Senior Python разработчика со следующими требованиями:</p>
+                        <ul>
+                            <li>Опыт работы в fintech компаниях</li>
+                            <li>Знание Django или Flask</li>
+                            <li>Опыт работы с микросервисной архитектурой</li>
+                            <li>Стаж работы от 5 лет</li>
+                            <li>Исключить рекрутеров и HR-специалистов</li>
+                        </ul>
+                        <p class="text-muted">Используйте операторы site:, AND, OR, кавычки и скобки для составления запроса.</p>
+                    </div>
+                    
+                    <div class="task-input">
+                        <label for="sourcingQuery" class="form-label">Ваш X-Ray запрос:</label>
+                        <textarea class="form-control" id="sourcingQuery" rows="4" 
+                            placeholder="Введите ваш поисковый запрос здесь..."></textarea>
+                    </div>
+                </div>
+            `;
+            
+            // Обработчик отправки ответа
+            submitButton.onclick = function() {
+                const query = document.getElementById('sourcingQuery').value.trim();
+                
+                if (!query) {
+                    alert('Пожалуйста, введите поисковый запрос');
+                    return;
+                }
+                
+                // Оцениваем запрос
+                const score = evaluateSourcingQuery(query);
+                
+                // Показываем результаты
+                modalBody.innerHTML = `
+                    <div class="test-task">
+                        <div class="progress mb-3">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: 100%" 
+                                 aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                Тест завершен
+                            </div>
+                        </div>
+                        
+                        <h5>Результаты тестирования</h5>
+                        
+                        <div class="score-summary mb-4">
+                            <h6>Итоговая оценка: ${score}/10</h6>
+                            <p class="score-explanation">
+                                ${getSourcingScoreDescription(score)}
+                            </p>
+                        </div>
+                        
+                        <div class="query-analysis mb-4">
+                            <h6>Анализ вашего запроса:</h6>
+                            <div class="analysis-details">
+                                ${analyzeSourcingQuery(query)}
+                            </div>
+                        </div>
+
+                        <div class="task-example">
+                            <h6>Пример правильного запроса:</h6>
+                            <pre class="bg-light p-3 rounded"><code>site:linkedin.com/in/ AND "Python Developer" AND (Django OR "Django Framework") AND ("microservices" OR "micro-service" OR "micro service") AND ("5 years" OR "5+ years" OR "five years") AND -job -jobs -recruiter -recruitment -hiring</code></pre>
+                        </div>
+                    </div>
+                `;
+                
+                // Обновляем оценку навыка
+                updateSkillScore(skillId, score);
+                
+                // Меняем кнопки
+                submitButton.style.display = 'none';
+                const closeButton = document.querySelector('#sourcingTaskModal .btn-secondary');
+                closeButton.onclick = function() {
+                    sourcingModal.hide();
+                };
+            };
+            
+            sourcingModal.show();
+        }
+
+        // Функция для оценки X-Ray запроса
+        function evaluateSourcingQuery(query) {
+            let score = 0;
+            
+            // Проверяем наличие основных операторов
+            if (query.includes('site:linkedin.com/in/')) score += 2;
+            if (query.includes('AND')) score += 1;
+            if (query.includes('OR')) score += 1;
+            if (query.includes('"')) score += 1;
+            if (query.includes('(') && query.includes(')')) score += 1;
+            
+            // Проверяем наличие ключевых требований
+            if (query.toLowerCase().includes('python')) score += 1;
+            if (query.toLowerCase().includes('django') || query.toLowerCase().includes('flask')) score += 1;
+            if (query.toLowerCase().includes('microservice')) score += 1;
+            if (query.toLowerCase().includes('5 year')) score += 1;
+            
+            // Проверяем исключения
+            if (query.includes('-job') || query.includes('-recruiter')) score += 1;
+            
+            return Math.min(score, 10);
+        }
+
+        // Функция для анализа X-Ray запроса
+        function analyzeSourcingQuery(query) {
+            const analysis = [];
+            
+            // Проверяем структуру запроса
+            if (!query.includes('site:linkedin.com/in/')) {
+                analysis.push('<p class="text-danger">❌ Отсутствует оператор site: для поиска на LinkedIn</p>');
+            } else {
+                analysis.push('<p class="text-success">✅ Правильно указан оператор site: для LinkedIn</p>');
+            }
+            
+            // Проверяем использование операторов
+            if (!query.includes('AND')) {
+                analysis.push('<p class="text-warning">⚠️ Рекомендуется использовать оператор AND для уточнения поиска</p>');
+            }
+            
+            if (!query.includes('OR')) {
+                analysis.push('<p class="text-warning">⚠️ Рекомендуется использовать оператор OR для альтернативных вариантов</p>');
+            }
+            
+            // Проверяем ключевые требования
+            if (!query.toLowerCase().includes('python')) {
+                analysis.push('<p class="text-danger">❌ Отсутствует ключевое слово Python</p>');
+            }
+            
+            if (!query.toLowerCase().includes('django') && !query.toLowerCase().includes('flask')) {
+                analysis.push('<p class="text-danger">❌ Отсутствуют ключевые слова Django или Flask</p>');
+            }
+            
+            if (!query.toLowerCase().includes('microservice')) {
+                analysis.push('<p class="text-danger">❌ Отсутствует упоминание микросервисов</p>');
+            }
+            
+            // Проверяем исключения
+            if (!query.includes('-job') && !query.includes('-recruiter')) {
+                analysis.push('<p class="text-warning">⚠️ Рекомендуется добавить исключения для рекрутеров и HR</p>');
+            }
+            
+            return analysis.join('');
+        }
+
+        // Функция для получения описания оценки по сорсингу
+        function getSourcingScoreDescription(score) {
+            if (score >= 9) return "Отличный результат! Вы демонстрируете глубокое понимание X-Ray поиска и эффективно используете все необходимые операторы.";
+            if (score >= 7) return "Хороший результат! Ваш запрос хорошо структурирован и учитывает большинство требований.";
+            if (score >= 5) return "Удовлетворительный результат. Есть возможности для улучшения в использовании операторов и структуре запроса.";
+            return "Требуется дополнительное изучение принципов X-Ray поиска и использования поисковых операторов.";
+        }
+
+        // Функция для открытия задания по техническим знаниям
+        function openTechKnowledgeTask(skillId) {
+            const techModal = new bootstrap.Modal(document.getElementById('techKnowledgeTaskModal'));
+            const modalTitle = document.querySelector('#techKnowledgeTaskModal .modal-title');
+            const modalBody = document.querySelector('#techKnowledgeTaskModal .modal-body');
+            const submitButton = document.querySelector('#techKnowledgeTaskModal #techKnowledgeTaskSubmit');
+            
+            modalTitle.textContent = 'Тестовое задание: Технические знания';
+            
+            // Расширенный список технологий и кода
+            const allTechItems = [
+                // DevOps
+                { id: 'docker', text: 'Docker', category: 'devops' },
+                { id: 'kubernetes', text: 'Kubernetes', category: 'devops' },
+                { id: 'jenkins', text: 'Jenkins', category: 'devops' },
+                { id: 'terraform', text: 'Terraform', category: 'devops' },
+                { id: 'ansible', text: 'Ansible', category: 'devops' },
+                { id: 'prometheus', text: 'Prometheus', category: 'devops' },
+                { id: 'grafana', text: 'Grafana', category: 'devops' },
+                { id: 'gitlab-ci', text: 'GitLab CI', category: 'devops' },
+                { id: 'bash-script', text: '#!/bin/bash\nfor i in {1..5}\ndo\n  echo "Deploying..."\ndone', category: 'devops', isCode: true },
+                { id: 'dockerfile', text: 'FROM node:14\nWORKDIR /app\nCOPY . .\nRUN npm install', category: 'devops', isCode: true },
+                
+                // Frontend
+                { id: 'react', text: 'React', category: 'frontend' },
+                { id: 'vue', text: 'Vue.js', category: 'frontend' },
+                { id: 'angular', text: 'Angular', category: 'frontend' },
+                { id: 'typescript', text: 'TypeScript', category: 'frontend' },
+                { id: 'webpack', text: 'Webpack', category: 'frontend' },
+                { id: 'redux', text: 'Redux', category: 'frontend' },
+                { id: 'js-code', text: 'const App = () => {\n  const [state, setState] = useState();\n  return <div>Hello</div>;\n}', category: 'frontend', isCode: true },
+                { id: 'css-code', text: '.container {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n}', category: 'frontend', isCode: true },
+                { id: 'html-code', text: '<div class="container">\n  <header>\n    <nav>...</nav>\n  </header>\n</div>', category: 'frontend', isCode: true },
+                { id: 'nextjs', text: 'Next.js', category: 'frontend' },
+                
+                // Python
+                { id: 'django', text: 'Django', category: 'python' },
+                { id: 'flask', text: 'Flask', category: 'python' },
+                { id: 'fastapi', text: 'FastAPI', category: 'python' },
+                { id: 'pandas', text: 'Pandas', category: 'python' },
+                { id: 'numpy', text: 'NumPy', category: 'python' },
+                { id: 'pytest', text: 'PyTest', category: 'python' },
+                { id: 'python-code', text: 'def process_data(data):\n    return [x * 2 for x in data\n    if x > 0]', category: 'python', isCode: true },
+                { id: 'celery', text: 'Celery', category: 'python' },
+                { id: 'sqlalchemy', text: 'SQLAlchemy', category: 'python' },
+                { id: 'scrapy', text: 'Scrapy', category: 'python' },
+                
+                // QA
+                { id: 'selenium', text: 'Selenium', category: 'qa' },
+                { id: 'jira', text: 'Jira', category: 'qa' },
+                { id: 'postman', text: 'Postman', category: 'qa' },
+                { id: 'jenkins-qa', text: 'Jenkins', category: 'qa' },
+                { id: 'git', text: 'Git', category: 'qa' },
+                { id: 'confluence', text: 'Confluence', category: 'qa' },
+                { id: 'cypress', text: 'Cypress', category: 'qa' },
+                { id: 'playwright', text: 'Playwright', category: 'qa' },
+                { id: 'testng', text: 'TestNG', category: 'qa' },
+                { id: 'jmeter', text: 'JMeter', category: 'qa' }
+            ];
+
+            // Функция для перемешивания массива
+            function shuffleArray(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+                return array;
+            }
+
+            // Выбираем случайные 20 карточек из общего списка
+            const techCards = shuffleArray([...allTechItems]).slice(0, 20);
+            
+            // Создаем контент для задания
+            modalBody.innerHTML = `
+                <div class="test-task">
+                    <div class="task-description mb-4">
+                        <h5>Задание:</h5>
+                        <p>Распределите карточки с технологиями и фрагментами кода по соответствующим категориям:</p>
+                        <ul>
+                            <li>DevOps - инструменты для автоматизации, развертывания и мониторинга</li>
+                            <li>Frontend - фреймворки, инструменты и код для разработки пользовательского интерфейса</li>
+                            <li>Python - фреймворки, библиотеки и код для Python-разработки</li>
+                            <li>QA - инструменты для тестирования и управления качеством</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="tech-cards-container">
+                        <div class="tech-category" data-category="devops">
+                            <h6>DevOps</h6>
+                            <div class="tech-cards-dropzone"></div>
+                        </div>
+                        <div class="tech-category" data-category="frontend">
+                            <h6>Frontend</h6>
+                            <div class="tech-cards-dropzone"></div>
+                        </div>
+                        <div class="tech-category" data-category="python">
+                            <h6>Python</h6>
+                            <div class="tech-cards-dropzone"></div>
+                        </div>
+                        <div class="tech-category" data-category="qa">
+                            <h6>QA</h6>
+                            <div class="tech-cards-dropzone"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="tech-cards-pool">
+                        <h6>Доступные карточки:</h6>
+                        <div class="tech-cards-grid">
+                            ${techCards.map(card => `
+                                <div class="tech-card ${card.isCode ? 'code-card' : ''}" data-id="${card.id}" data-category="${card.category}">
+                                    ${card.isCode ? `<pre><code>${card.text}</code></pre>` : card.text}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Добавляем стили для карточек с кодом
+            const style = document.createElement('style');
+            style.textContent = `
+                .tech-card {
+                    background: white;
+                    border: 1px solid #dee2e6;
+                    border-radius: 6px;
+                    padding: 10px;
+                    margin-bottom: 10px;
+                    cursor: move;
+                    transition: all 0.2s ease;
+                    user-select: none;
+                    text-align: center;
+                    min-height: 40px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+
+                .tech-card:hover {
+                    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                }
+
+                .tech-card.dragging {
+                    opacity: 0.5;
+                    background: #e9ecef;
+                }
+
+                .code-card {
+                    font-family: 'Consolas', 'Monaco', monospace;
+                    white-space: pre;
+                    overflow-x: auto;
+                    background: #282c34;
+                    color: #abb2bf;
+                    border: 1px solid #3b4048;
+                    text-align: left;
+                    padding: 8px;
+                    font-size: 0.85em;
+                    position: relative;
+                }
+
+                .code-card::before {
+                    content: 'CODE';
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    background: #3b4048;
+                    color: #abb2bf;
+                    padding: 2px 6px;
+                    font-size: 0.7em;
+                    border-bottom-left-radius: 4px;
+                }
+
+                .code-card pre {
+                    margin: 0;
+                    padding: 0;
+                }
+
+                .code-card code {
+                    font-family: inherit;
+                }
+
+                .tech-cards-grid {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+                    gap: 10px;
+                    padding: 10px;
+                }
+
+                .tech-category {
+                    flex: 1;
+                    min-height: 200px;
+                    border: 2px dashed #ccc;
+                    border-radius: 8px;
+                    padding: 15px;
+                    background-color: #f8f9fa;
+                    transition: all 0.2s ease;
+                }
+
+                .tech-category.drag-over {
+                    border-color: #0d6efd;
+                    background-color: #e7f1ff;
+                }
+
+                .tech-cards-dropzone {
+                    min-height: 50px;
+                    padding: 10px;
+                    border-radius: 4px;
+                    background: rgba(0,0,0,0.02);
+                }
+            `;
+            document.head.appendChild(style);
+            
+            // Инициализация drag&drop после создания DOM
+            requestAnimationFrame(() => {
+                initializeDragAndDrop();
+            });
+            
+            // Обработчик проверки
+            submitButton.onclick = function() {
+                const score = calculateScore();
+                
+                // Показываем результаты
+                modalBody.innerHTML = `
+                    <div class="test-task">
+                        <div class="progress mb-3">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: 100%" 
+                                 aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                Тест завершен
+                            </div>
+                        </div>
+                        
+                        <h5>Результаты тестирования</h5>
+                        
+                        <div class="score-summary mb-4">
+                            <h6>Итоговая оценка: ${score}/10</h6>
+                            <p class="score-explanation">
+                                ${getTechScoreDescription(score)}
+                            </p>
+                        </div>
+                        
+                        <div class="analysis-details">
+                            ${analyzeTechAnswers()}
+                        </div>
+                    </div>
+                `;
+                
+                // Обновляем оценку навыка
+                updateSkillScore(skillId, score);
+                
+                // Меняем кнопки
+                submitButton.style.display = 'none';
+                const closeButton = document.querySelector('#techKnowledgeTaskModal .btn-secondary');
+                closeButton.onclick = function() {
+                    techModal.hide();
+                };
+            };
+            
+            techModal.show();
+        }
+
+        // Функция инициализации drag&drop
+        function initializeDragAndDrop() {
+            const cards = document.querySelectorAll('.tech-card');
+            const dropzones = document.querySelectorAll('.tech-cards-dropzone');
+            const pool = document.querySelector('.tech-cards-pool');
+
+            cards.forEach(card => {
+                card.setAttribute('draggable', 'true');
+                
+                card.addEventListener('dragstart', (e) => {
+                    e.dataTransfer.setData('text/plain', '');
+                    card.classList.add('dragging');
+                });
+
+                card.addEventListener('dragend', () => {
+                    card.classList.remove('dragging');
+                });
+            });
+
+            [pool, ...dropzones].forEach(zone => {
+                zone.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    zone.classList.add('drag-over');
+                });
+
+                zone.addEventListener('dragleave', () => {
+                    zone.classList.remove('drag-over');
+                });
+
+                zone.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    zone.classList.remove('drag-over');
+                    const card = document.querySelector('.dragging');
+                    if (card) {
+                        const previousContainer = card.parentElement;
+                        if (previousContainer) {
+                            previousContainer.removeChild(card);
+                        }
+                        zone.appendChild(card);
+                    }
+                });
+            });
+        }
+
+        // Функция подсчета результата
+        function calculateScore() {
+            console.log('Начало подсчета баллов');
+            const dropzones = document.querySelectorAll('.tech-cards-dropzone');
+            const pool = document.querySelector('.tech-cards-pool');
+            let totalCards = 0;
+            let correctPlacements = 0;
+            
+            // Подсчет карточек в пуле
+            const poolCards = pool.querySelectorAll('.tech-card');
+            totalCards += poolCards.length;
+            console.log('Карточек в пуле:', poolCards.length);
+            
+            // Подсчет карточек в зонах
+            dropzones.forEach(zone => {
+                // Определяем категорию по заголовку зоны
+                const categoryHeader = zone.previousElementSibling;
+                const category = categoryHeader ? categoryHeader.textContent.trim().toLowerCase() : null;
+                
+                console.log(`Проверка категории: ${category}`);
+                const cards = zone.querySelectorAll('.tech-card');
+                totalCards += cards.length;
+                
+                if (category) {
+                    console.log(`Категория ${category}:`);
+                    cards.forEach(card => {
+                        const cardCategory = card.dataset.category;
+                        console.log(`- Карточка ${card.textContent.trim()}: категория ${cardCategory}`);
+                        if (cardCategory === category) {
+                            correctPlacements++;
+                            console.log('  Правильное размещение!');
+                        }
+                    });
+                }
+            });
+            
+            console.log('Всего карточек:', totalCards);
+            console.log('Правильно размещено:', correctPlacements);
+            
+            // Вычисляем процент правильных ответов
+            const percentage = totalCards > 0 ? (correctPlacements / totalCards) * 100 : 0;
+            console.log('Процент правильных ответов:', percentage);
+            
+            // Преобразуем процент в оценку из 10
+            const score = Math.round(percentage / 10);
+            console.log('Итоговая оценка:', score);
+            
+            return score;
+        }
+
+        // Функция анализа ответов
+        function analyzeTechAnswers() {
+            const dropzones = document.querySelectorAll('.tech-cards-dropzone');
+            const pool = document.querySelector('.tech-cards-pool');
+            let analysisHtml = '<div class="analysis-details">';
+            
+            // Правильные ответы для каждой категории
+            const correctAnswers = {
+                'devops': ['Docker', 'Kubernetes', 'Jenkins', 'Terraform', 'Ansible', 'Prometheus'],
+                'frontend': ['React', 'Vue.js', 'Angular', 'TypeScript', 'Webpack', 'Redux'],
+                'python': ['Django', 'Flask', 'FastAPI', 'Pandas', 'NumPy', 'PyTest'],
+                'qa': ['Selenium', 'Jira', 'Postman', 'Jenkins', 'Git', 'Confluence']
+            };
+            
+            // Анализ по категориям
+            dropzones.forEach(dropzone => {
+                const category = dropzone.previousElementSibling.textContent.trim().toLowerCase();
+                const cards = dropzone.querySelectorAll('.tech-card');
+                
+                if (cards.length > 0) {
+                    analysisHtml += `
+                        <div class="category-analysis mb-4">
+                            <h6 class="text-primary">${category.toUpperCase()}</h6>
+                            <div class="correct-placements">
+                                <strong>Размещено:</strong>
+                                <ul class="list-unstyled">
+                                    ${Array.from(cards).map(card => {
+                                        const cardCategory = card.getAttribute('data-category');
+                                        const isCorrect = cardCategory === category;
+                                        return `
+                                            <li class="${isCorrect ? 'text-success' : 'text-danger'}">
+                                                <i class="bi ${isCorrect ? 'bi-check-circle' : 'bi-x-circle'}"></i>
+                                                ${card.textContent.trim()}
+                                            </li>
+                                        `;
+                                    }).join('')}
+                                </ul>
+                            </div>
+                            <div class="expected-answers mt-2">
+                                <strong class="text-primary">Должно быть:</strong>
+                                <ul class="list-unstyled">
+                                    ${correctAnswers[category].map(tech => `
+                                        <li class="text-primary">
+                                            <i class="bi bi-check2-circle"></i>
+                                            ${tech}
+                                        </li>
+                                    `).join('')}
+                                </ul>
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+            
+            // Анализ неразмещенных карточек
+            const unplacedCards = pool.querySelectorAll('.tech-card');
+            if (unplacedCards.length > 0) {
+                analysisHtml += `
+                    <div class="unplaced-cards mb-4">
+                        <h6 class="text-warning">Неразмещенные технологии:</h6>
+                        <ul class="list-unstyled">
+                            ${Array.from(unplacedCards).map(card => `
+                                <li class="text-warning">
+                                    <i class="bi bi-exclamation-circle"></i>
+                                    ${card.textContent.trim()}
+                                </li>
+                            `).join('')}
+                        </ul>
+                    </div>
+                `;
+            }
+            
+            // Добавляем рекомендации
+            const finalScore = calculateScore();
+            analysisHtml += `
+                <div class="recommendations mt-4">
+                    <h6 class="text-primary">Рекомендации:</h6>
+                    <ul class="list-unstyled">
+                        ${getScoreDescription(finalScore).split('. ').map(rec => `
+                            <li class="mb-2">
+                                <i class="bi bi-arrow-right-circle"></i>
+                                ${rec}
+                            </li>
+                        `).join('')}
+                    </ul>
+                </div>
+            `;
+            
+            analysisHtml += '</div>';
+            console.log('Сформированный HTML анализа:', analysisHtml);
+            return analysisHtml;
+        }
+
+        function getCategoryName(category) {
+            const names = {
+                'devops': 'DevOps',
+                'frontend': 'Frontend',
+                'python': 'Python',
+                'qa': 'QA',
+                'uncategorized': 'Некатегоризированные'
+            };
+            return names[category] || category;
+        }
+
+        // Функция для получения описания оценки по техническим знаниям
+        function getTechScoreDescription(score) {
+            if (score >= 9) return "Отличный результат! Вы демонстрируете глубокое понимание различных технологических стеков и их применения.";
+            if (score >= 7) return "Хороший результат! Вы хорошо разбираетесь в основных технологиях и их категоризации.";
+            if (score >= 5) return "Удовлетворительный результат. Есть возможности для улучшения в понимании некоторых технологических категорий.";
+            return "Требуется дополнительное изучение технологических стеков и их применения.";
+        }
+
+        // Обновленный список технологий
+        const technologies = [
+            // DevOps
+            { name: 'Docker', category: 'devops', type: 'icon', icon: 'bi-box' },
+            { name: 'Kubernetes', category: 'devops', type: 'icon', icon: 'bi-diagram-3' },
+            { name: 'Jenkins', category: 'devops', type: 'icon', icon: 'bi-gear' },
+            { name: 'Terraform', category: 'devops', type: 'icon', icon: 'bi-cloud' },
+            { name: 'Ansible', category: 'devops', type: 'icon', icon: 'bi-diagram-2' },
+            { name: 'Prometheus', category: 'devops', type: 'icon', icon: 'bi-graph-up' },
+            { name: 'GitLab CI', category: 'devops', type: 'icon', icon: 'bi-git' },
+            { name: 'AWS', category: 'devops', type: 'icon', icon: 'bi-cloud-fill' },
+            { name: 'Bash скрипт', category: 'devops', type: 'code', code: '#!/bin/bash\nfor i in {1..5}; do\n  echo "Processing $i"\n  sleep 1\ndone' },
+            { name: 'Dockerfile', category: 'devops', type: 'code', code: 'FROM node:14\nWORKDIR /app\nCOPY . .\nRUN npm install\nCMD ["npm", "start"]' },
+            
+            // Frontend
+            { name: 'React', category: 'frontend', type: 'icon', icon: 'bi-code-slash' },
+            { name: 'Vue.js', category: 'frontend', type: 'icon', icon: 'bi-window' },
+            { name: 'Angular', category: 'frontend', type: 'icon', icon: 'bi-window-stack' },
+            { name: 'TypeScript', category: 'frontend', type: 'icon', icon: 'bi-filetype-ts' },
+            { name: 'Webpack', category: 'frontend', type: 'icon', icon: 'bi-boxes' },
+            { name: 'Redux', category: 'frontend', type: 'icon', icon: 'bi-diagram-3-fill' },
+            { name: 'Sass', category: 'frontend', type: 'icon', icon: 'bi-palette' },
+            { name: 'Bootstrap', category: 'frontend', type: 'icon', icon: 'bi-grid' },
+            { name: 'JavaScript код', category: 'frontend', type: 'code', code: 'const greeting = (name) => {\n  return `Hello, ${name}!`;\n};\nconsole.log(greeting("World"));' },
+            { name: 'CSS стили', category: 'frontend', type: 'code', code: '.button {\n  background: #007bff;\n  color: white;\n  padding: 10px 20px;\n  border-radius: 5px;\n}' },
+            { name: 'HTML разметка', category: 'frontend', type: 'code', code: '<div class="container">\n  <h1>Welcome</h1>\n  <p>This is a sample page</p>\n</div>' },
+            
+            // Python
+            { name: 'Django', category: 'python', type: 'icon', icon: 'bi-filetype-py' },
+            { name: 'Flask', category: 'python', type: 'icon', icon: 'bi-cup-hot' },
+            { name: 'FastAPI', category: 'python', type: 'icon', icon: 'bi-lightning' },
+            { name: 'Pandas', category: 'python', type: 'icon', icon: 'bi-table' },
+            { name: 'NumPy', category: 'python', type: 'icon', icon: 'bi-grid-3x3' },
+            { name: 'PyTest', category: 'python', type: 'icon', icon: 'bi-check-circle' },
+            { name: 'SQLAlchemy', category: 'python', type: 'icon', icon: 'bi-database' },
+            { name: 'Celery', category: 'python', type: 'icon', icon: 'bi-arrow-repeat' },
+            { name: 'Python функция', category: 'python', type: 'code', code: 'def calculate_fibonacci(n):\n    if n <= 1:\n        return n\n    return calculate_fibonacci(n-1) + calculate_fibonacci(n-2)' },
+            
+            // QA
+            { name: 'Selenium', category: 'qa', type: 'icon', icon: 'bi-browser-chrome' },
+            { name: 'Jira', category: 'qa', type: 'icon', icon: 'bi-kanban' },
+            { name: 'Postman', category: 'qa', type: 'icon', icon: 'bi-send' },
+            { name: 'Jenkins', category: 'qa', type: 'icon', icon: 'bi-gear' },
+            { name: 'Git', category: 'qa', type: 'icon', icon: 'bi-git' },
+            { name: 'Confluence', category: 'qa', type: 'icon', icon: 'bi-file-text' },
+            { name: 'Cypress', category: 'qa', type: 'icon', icon: 'bi-check2-square' },
+            { name: 'TestNG', category: 'qa', type: 'icon', icon: 'bi-list-check' },
+            
+            // Не относящиеся ни к одной категории
+            { name: 'Microsoft Word', category: 'uncategorized', type: 'icon', icon: 'bi-file-word' },
+            { name: 'Adobe Photoshop', category: 'uncategorized', type: 'icon', icon: 'bi-image' },
+            { name: 'Excel', category: 'uncategorized', type: 'icon', icon: 'bi-file-excel' },
+            { name: 'PowerPoint', category: 'uncategorized', type: 'icon', icon: 'bi-file-slides' },
+            { name: 'Notepad++', category: 'uncategorized', type: 'icon', icon: 'bi-file-text' },
+            { name: 'Visual Studio Code', category: 'uncategorized', type: 'icon', icon: 'bi-code-square' },
+            { name: 'Skype', category: 'uncategorized', type: 'icon', icon: 'bi-chat-dots' },
+            { name: 'Slack', category: 'uncategorized', type: 'icon', icon: 'bi-chat' },
+            { name: 'Telegram', category: 'uncategorized', type: 'icon', icon: 'bi-chat-left' },
+            { name: 'WhatsApp', category: 'uncategorized', type: 'icon', icon: 'bi-whatsapp' },
+            { name: 'Zoom', category: 'uncategorized', type: 'icon', icon: 'bi-camera-video' },
+            { name: 'Discord', category: 'uncategorized', type: 'icon', icon: 'bi-discord' }
+        ];
+
+        function createTechCard(tech) {
+            const card = document.createElement('div');
+            card.className = 'tech-card';
+            card.draggable = true;
+            card.dataset.category = tech.category;
+            
+            if (tech.type === 'icon') {
+                card.classList.add('tech-icon');
+                card.innerHTML = `
+                    <i class="bi ${tech.icon}"></i>
+                    <div class="tech-name">${tech.name}</div>
+                `;
+            } else if (tech.type === 'code') {
+                card.classList.add('code-card');
+                card.innerHTML = `
+                    <div class="code-label">CODE</div>
+                    <div class="code-content">
+                        <pre><code>${tech.code}</code></pre>
+                    </div>
+                `;
+            }
+
+            if (tech.category === 'uncategorized') {
+                card.classList.add('uncategorized');
+            }
+
+            return card;
+        }
+
+        function openTechTask(skillId) {
+            const modal = document.getElementById('techTaskModal');
+            const modalBody = modal.querySelector('.modal-body');
+            const submitBtn = modal.querySelector('.btn-primary');
+            
+            // Очищаем предыдущие карточки
+            modalBody.innerHTML = `
+                <div class="tech-cards-pool">
+                    <div class="pool-label">Перетащите технологии в соответствующие категории</div>
+                    <div class="tech-cards-container"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5>DevOps</h5>
+                        <div class="tech-cards-dropzone" data-category="devops"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <h5>Frontend</h5>
+                        <div class="tech-cards-dropzone" data-category="frontend"></div>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <h5>Python</h5>
+                        <div class="tech-cards-dropzone" data-category="python"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <h5>QA</h5>
+                        <div class="tech-cards-dropzone" data-category="qa"></div>
+                    </div>
+                </div>
+            `;
+
+            // Создаем и добавляем карточки в пул
+            const poolContainer = modalBody.querySelector('.tech-cards-container');
+            
+            // Сначала добавляем некатегоризированные карточки
+            const uncategorizedTechs = technologies.filter(tech => tech.category === 'uncategorized');
+            uncategorizedTechs.forEach(tech => {
+                const card = createTechCard(tech);
+                poolContainer.appendChild(card);
+            });
+
+            // Затем добавляем остальные карточки
+            const categorizedTechs = technologies.filter(tech => tech.category !== 'uncategorized');
+            categorizedTechs.forEach(tech => {
+                const card = createTechCard(tech);
+                poolContainer.appendChild(card);
+            });
+
+            // Инициализируем drag & drop
+            initializeDragAndDrop();
+
+            // Обновляем обработчик кнопки
+            submitBtn.onclick = () => {
+                const score = calculateScore();
+                const analysis = analyzeTechAnswers();
+                
+                modalBody.innerHTML = `
+                    <div class="progress mb-4">
+                        <div class="progress-bar" role="progressbar" style="width: ${score * 10}%">
+                            ${score}/10
+                        </div>
+                    </div>
+                    <div class="analysis-content">
+                        ${analysis}
+                    </div>
+                `;
+                
+                submitBtn.textContent = 'Закрыть';
+                submitBtn.classList.remove('btn-primary');
+                submitBtn.classList.add('btn-secondary');
+                submitBtn.onclick = () => {
+                    modal.style.display = 'none';
+                };
+            };
+
+            modal.style.display = 'block';
+        }
+
+        function getCardName(card) {
+            // Для карточек с иконками
+            const techName = card.querySelector('.tech-name');
+            if (techName) {
+                return techName.textContent.trim();
+            }
+            
+            // Для карточек с кодом
+            const codeContent = card.querySelector('.code-content');
+            if (codeContent) {
+                const code = codeContent.textContent.trim();
+                // Ограничиваем длину кода для отображения
+                return code.length > 50 ? code.substring(0, 50) + '...' : code;
+            }
+            
+            // Для остальных карточек
+            return card.textContent.trim();
+        }
+
+        function finishTest() {
+            console.log('Начало завершения теста');
+            
+            // Получаем элементы модального окна
+            const modal = document.getElementById('techTaskModal');
+            const modalBody = modal.querySelector('.modal-body');
+            const modalFooter = modal.querySelector('.modal-footer');
+            const submitButton = modal.querySelector('.btn-primary');
+            
+            // Скрываем кнопку "Ответить"
+            if (submitButton) {
+                submitButton.style.display = 'none';
+            }
+            
+            // Получаем анализ ответов и финальный счет
+            const finalScore = calculateScore();
+            const analysis = analyzeTechAnswers();
+            console.log('Получен анализ:', analysis);
+            
+            // Очищаем текущее содержимое
+            modalBody.innerHTML = '';
+            
+            // Создаем контейнер для результатов
+            const resultsContainer = document.createElement('div');
+            resultsContainer.className = 'results-container';
+            
+            // Добавляем заголовок и прогресс-бар
+            const headerHtml = `
+                <div class="results-header mb-4">
+                    <h5>Результаты тестирования</h5>
+                    <div class="progress mb-3">
+                        <div class="progress-bar" role="progressbar" style="width: ${finalScore * 10}%">
+                            ${finalScore}/10
+                        </div>
+                    </div>
+                    <p class="text-muted">${getScoreDescription(finalScore)}</p>
+                </div>
+            `;
+            
+            // Добавляем анализ
+            const analysisHtml = `
+                <div class="analysis-section">
+                    ${analysis}
+                </div>
+            `;
+            
+            // Собираем все вместе
+            resultsContainer.innerHTML = headerHtml + analysisHtml;
+            
+            // Добавляем в модальное окно
+            modalBody.appendChild(resultsContainer);
+            
+            // Создаем кнопку закрытия
+            const closeButton = document.createElement('button');
+            closeButton.className = 'btn btn-secondary';
+            closeButton.innerHTML = '<i class="bi bi-x-circle"></i> Закрыть';
+            closeButton.onclick = () => {
+                const modalInstance = bootstrap.Modal.getInstance(modal);
+                if (modalInstance) {
+                    modalInstance.hide();
+                }
+            };
+            
+            // Очищаем и обновляем футер
+            modalFooter.innerHTML = '';
+            modalFooter.appendChild(closeButton);
+            
+            // Принудительно обновляем модальное окно
+            const modalInstance = bootstrap.Modal.getInstance(modal);
+            if (modalInstance) {
+                modalInstance.handleUpdate();
+            }
+            
+            console.log('Тест завершен, результаты отображены');
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+</body>
+</html>
