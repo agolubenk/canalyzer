@@ -949,26 +949,29 @@
         // Функция для открытия модального окна с тестовым заданием
         function openTestTaskModal(skillId, skillTitle) {
             console.log('Opening test task modal for:', { skillId, skillTitle });
-            // Определяем тип задания на основе skillTitle
+            
+            // Сохраняем текущее значение ползунка
+            const currentScore = document.getElementById(`skill${skillId}Range`)?.value || 5;
+            
             if (skillTitle === "Ведение и формирование аналитических данных") {
                 console.log('Opening analytics task');
-                openAnalyticsTask(skillId);
+                openAnalyticsTask(skillId, currentScore);
             } else if (skillTitle.includes('roadmap')) {
                 console.log('Opening roadmap task');
-                openRoadmapTask(skillId);
+                openRoadmapTask(skillId, currentScore);
             } else if (skillTitle.includes('сорсинг')) {
                 console.log('Opening sourcing task');
-                openSourcingTask(skillId);
+                openSourcingTask(skillId, currentScore);
             } else if (skillTitle.includes('технических')) {
                 console.log('Opening tech knowledge task');
-                openTechKnowledgeTask(skillId);
+                openTechKnowledgeTask(skillId, currentScore);
             } else {
                 console.log('No matching task type found for:', skillTitle);
             }
         }
 
         // Функция для аналитического задания
-        function openAnalyticsTask(skillId) {
+        function openAnalyticsTask(skillId, currentScore) {
             const analyticsModal = new bootstrap.Modal(document.getElementById('analyticsTaskModal'));
             const modalTitle = document.querySelector('#analyticsTaskModal .modal-title');
             const modalBody = document.querySelector('#analyticsTaskModal .modal-body');
@@ -1163,15 +1166,39 @@
 
         // Функция для обновления оценки навыка
         function updateSkillScore(skillId, score) {
-            const skillScore = document.querySelector(`#${skillId} .skill-score`);
-            if (skillScore) {
-                const progressBar = skillScore.querySelector('.progress-bar');
-                if (progressBar) {
-                    progressBar.style.width = `${score * 10}%`;
-                    progressBar.textContent = `${score}/10`;
+            // Обновляем значение ползунка
+            const rangeInput = document.getElementById(`skill${skillId}Range`);
+            if (rangeInput) {
+                rangeInput.value = score;
+                // Вызываем событие input для обновления всех связанных элементов
+                rangeInput.dispatchEvent(new Event('input'));
+            }
+
+            // Обновляем отображаемое значение
+            const valueDisplay = document.getElementById(`skill${skillId}Value`);
+            if (valueDisplay) {
+                valueDisplay.textContent = score;
+            }
+
+            // Обновляем описание навыка
+            const descriptionDisplay = document.getElementById(`skill${skillId}Description`);
+            if (descriptionDisplay) {
+                const skill = skills.find(s => s.id === parseInt(skillId));
+                if (skill) {
+                    updateSkillDescription(skill, score);
                 }
             }
-            // Обновляем фидбек после изменения оценки
+
+            // Обновляем индикаторы грейда
+            const skill = skills.find(s => s.id === parseInt(skillId));
+            if (skill) {
+                updateGradeIndicators(skill, score);
+            }
+
+            // Обновляем общий счет
+            updateTotalScore();
+
+            // Обновляем фидбек
             document.getElementById('feedback').value = generateFeedback();
         }
 
@@ -1449,7 +1476,7 @@
         }
 
         // Функция для открытия задания по roadmap
-        function openRoadmapTask(skillId) {
+        function openRoadmapTask(skillId, currentScore) {
             const roadmapModal = new bootstrap.Modal(document.getElementById('roadmapTaskModal'));
             const modalTitle = document.querySelector('#roadmapTaskModal .modal-title');
             const modalBody = document.querySelector('#roadmapTaskModal .modal-body');
@@ -1663,7 +1690,7 @@
         }
 
         // Функция для открытия задания по сорсингу
-        function openSourcingTask(skillId) {
+        function openSourcingTask(skillId, currentScore) {
             const sourcingModal = new bootstrap.Modal(document.getElementById('sourcingTaskModal'));
             const modalTitle = document.querySelector('#sourcingTaskModal .modal-title');
             const modalBody = document.querySelector('#sourcingTaskModal .modal-body');
@@ -1827,7 +1854,7 @@
         }
 
         // Функция для открытия задания по техническим знаниям
-        function openTechKnowledgeTask(skillId) {
+        function openTechKnowledgeTask(skillId, currentScore) {
             const techModal = new bootstrap.Modal(document.getElementById('techKnowledgeTaskModal'));
             const modalTitle = document.querySelector('#techKnowledgeTaskModal .modal-title');
             const modalBody = document.querySelector('#techKnowledgeTaskModal .modal-body');
