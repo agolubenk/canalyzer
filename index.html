@@ -55,19 +55,13 @@
                             <input type="date" class="form-control" id="interviewDate">
                         </div>
                         <div class="mb-3">
-                            <label for="interviewer" class="form-label">Интервьюер</label>
-                            <input type="text" class="form-control" id="interviewer">
+                            <input type="hidden" class="form-control" id="interviewer" value="Андрей Голубенко" >
                         </div>
                         <div class="mb-3">
                             <label for="comments" class="form-label">Комментарий</label>
                             <textarea class="form-control" id="comments" rows="3"></textarea>
                         </div>
                     </div>
-                </div>
-                <div class="text-center mt-3">
-                    <button id="analyzeBtn" class="btn btn-primary">
-                        <i class="bi bi-search"></i> Сформировать отчет
-                    </button>
                 </div>
             </div>
         </div>
@@ -81,7 +75,11 @@
                         <!-- Skills will be added here dynamically -->
                     </div>
                 </div>
-                
+                <div class="text-center mt-3 w-100">
+                    <button id="analyzeBtn" class="btn btn-lg w-100 btn-primary">
+                        <i class="bi bi-search"></i> Сформировать отчет
+                    </button>
+                </div>        
                 <div id="result-section" class="mt-5">
                     <h3 class="mb-3">Результаты анализа</h3>
                     
@@ -150,6 +148,18 @@
                             <div id="recommendations"></div>
                         </div>
                     </div>
+                    
+                    <div class="card mt-4">
+                        <div class="card-header">
+                            <h5 class="mb-0">Фидбек</h5>
+                        </div>
+                        <div class="card-body position-relative">
+                            <button class="btn btn-link position-absolute top-0 end-0 mt-3 me-3" id="copyFeedbackBtn" title="Копировать фидбек" style="font-size: 1.5rem; padding: 0.25rem;">
+                                <i class="bi bi-clipboard"></i>
+                            </button>
+                            <textarea id="feedback" class="form-control pe-5" rows="12" style="min-height: 300px;" placeholder="Введите ваш фидбек здесь..."></textarea>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -160,7 +170,7 @@
 
     <!-- Модальное окно для аналитического задания -->
     <div class="modal fade" id="analyticsTaskModal" tabindex="-1">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-lg modal-fullscreen">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Ведение и формирование аналитических данных</h5>
@@ -179,7 +189,7 @@
 
     <!-- Модальное окно для тестового задания по roadmap -->
     <div class="modal fade" id="roadmapTaskModal" tabindex="-1">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-lg modal-fullscreen">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Разработка/исполнение roadmap и проведение анализа</h5>
@@ -198,7 +208,7 @@
 
     <!-- Модальное окно для тестового задания по сорсингу -->
     <div class="modal fade" id="sourcingTaskModal" tabindex="-1">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-lg modal-fullscreen">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Использование LinkedIn и X-Ray запросов для сорсинга специалистов</h5>
@@ -217,7 +227,7 @@
 
     <!-- Модальное окно для тестового задания по техническим знаниям -->
     <div class="modal fade" id="techKnowledgeTaskModal" tabindex="-1">
-        <div class="modal-dialog modal-xl">
+        <div class="modal-dialog modal-xl modal-fullscreen">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Знание технических и технологических специфик в ИТ и digital направлениях</h5>
@@ -929,7 +939,7 @@
                         {
                             text: "1. LinkedIn: \"Senior Java Developer\" \"microservices\" \"Spring Boot\" \"Kubernetes\". 2. GitHub: поиск по репозиториям с микросервисами. 3. Stack Overflow: поиск по тегам java, spring-boot, kubernetes. 4. Технические блоги и статьи. 5. Конференции: списки спикеров.",
                             score: 8,
-                            feedback: "Хороший план с использованием нескольких источников и учетом всех требований."
+                            feedback: "Хороший план с исполпользованием нескольких источников и учетом всех требований."
                         }
                     ]
                 }
@@ -1153,18 +1163,16 @@
 
         // Функция для обновления оценки навыка
         function updateSkillScore(skillId, score) {
-            const rangeInput = document.getElementById(`skill${skillId}Range`);
-            const valueDisplay = document.getElementById(`skill${skillId}Value`);
-            const descriptionDisplay = document.getElementById(`skill${skillId}Description`);
-            
-            if (rangeInput && valueDisplay && descriptionDisplay) {
-                rangeInput.value = score;
-                valueDisplay.textContent = score;
-                updateGradeIndicators(skills.find(s => s.id === parseInt(skillId)), score);
-                updateSkillDescription(skills.find(s => s.id === parseInt(skillId)), score);
-                // Обновляем общий счет
-                updateTotalScore();
+            const skillScore = document.querySelector(`#${skillId} .skill-score`);
+            if (skillScore) {
+                const progressBar = skillScore.querySelector('.progress-bar');
+                if (progressBar) {
+                    progressBar.style.width = `${score * 10}%`;
+                    progressBar.textContent = `${score}/10`;
+                }
             }
+            // Обновляем фидбек после изменения оценки
+            document.getElementById('feedback').value = generateFeedback();
         }
 
         // Функция для обновления общего количества баллов
@@ -2549,6 +2557,140 @@
             
             console.log('Тест завершен, результаты отображены');
         }
+
+        function calculateScore() {
+            // ... existing code ...
+        }
+
+        function generateFeedback() {
+            let feedback = '';
+            
+            // Получаем текст из блока "Детальный анализ по навыкам"
+            const detailedAnalysis = document.getElementById('detailed-skills-analysis');
+            if (detailedAnalysis) {
+                feedback += '=== ДЕТАЛЬНЫЙ АНАЛИЗ ПО НАВЫКАМ ===\n\n';
+                
+                // Получаем сильные стороны
+                const strengths = detailedAnalysis.querySelector('.col-md-6:first-child');
+                if (strengths) {
+                    feedback += 'СИЛЬНЫЕ СТОРОНЫ:\n';
+                    const items = strengths.querySelectorAll('.list-group-item');
+                    items.forEach(item => {
+                        if (!item.classList.contains('text-muted')) {
+                            const title = item.querySelector('strong')?.textContent || '';
+                            const rating = item.querySelector('.mt-1')?.textContent.trim() || '';
+                            feedback += `• ${title}\n  ${rating}\n`;
+                        } else {
+                            feedback += `• ${item.textContent.trim()}\n`;
+                        }
+                    });
+                    feedback += '\n';
+                }
+                
+                // Получаем области для развития
+                const weaknesses = detailedAnalysis.querySelector('.col-md-6:last-child');
+                if (weaknesses) {
+                    feedback += 'ОБЛАСТИ ДЛЯ РАЗВИТИЯ:\n';
+                    const items = weaknesses.querySelectorAll('.list-group-item');
+                    items.forEach(item => {
+                        if (!item.classList.contains('text-muted')) {
+                            const title = item.querySelector('strong')?.textContent || '';
+                            const rating = item.querySelector('.mt-1')?.textContent.trim() || '';
+                            feedback += `• ${title}\n  ${rating}\n`;
+                        } else {
+                            feedback += `• ${item.textContent.trim()}\n`;
+                        }
+                    });
+                    feedback += '\n';
+                }
+            }
+            
+            // Получаем текст из блока "Рекомендации"
+            const recommendations = document.getElementById('recommendations');
+            if (recommendations) {
+                feedback += '=== РЕКОМЕНДАЦИИ ===\n\n';
+                
+                // Получаем основной текст рекомендаций
+                const mainText = recommendations.querySelector('p');
+                if (mainText) {
+                    feedback += mainText.textContent.trim() + '\n\n';
+                }
+                
+                // Получаем предупреждения и информационные сообщения
+                const alerts = recommendations.querySelectorAll('.alert');
+                alerts.forEach(alert => {
+                    feedback += alert.textContent.trim().replace(/\s+/g, ' ') + '\n';
+                });
+                
+                // Получаем рекомендации по улучшению
+                const improvementTitle = recommendations.querySelector('h6');
+                const improvementList = recommendations.querySelector('.list-group');
+                if (improvementTitle && improvementList) {
+                    feedback += '\n' + improvementTitle.textContent.trim() + '\n';
+                    const items = improvementList.querySelectorAll('.list-group-item');
+                    items.forEach(item => {
+                        const title = item.querySelector('strong')?.textContent || '';
+                        const details = item.querySelector('.mt-1')?.textContent.trim() || '';
+                        feedback += `• ${title}\n  ${details}\n`;
+                    });
+                }
+            }
+            
+            return feedback;
+        }
+
+        // Добавляем обработчик для обновления фидбека при изменении анализа или рекомендаций
+        const observer = new MutationObserver(() => {
+            const feedbackTextarea = document.getElementById('feedback');
+            if (feedbackTextarea) {
+                feedbackTextarea.value = generateFeedback();
+            }
+        });
+
+        // Наблюдаем за изменениями в блоках анализа и рекомендаций
+        const detailedAnalysis = document.getElementById('detailed-skills-analysis');
+        const recommendations = document.getElementById('recommendations');
+
+        if (detailedAnalysis) {
+            observer.observe(detailedAnalysis, {
+                childList: true,
+                subtree: true,
+                characterData: true
+            });
+        }
+
+        if (recommendations) {
+            observer.observe(recommendations, {
+                childList: true,
+                subtree: true,
+                characterData: true
+            });
+        }
+
+        // Инициализируем фидбек при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            const feedbackTextarea = document.getElementById('feedback');
+            if (feedbackTextarea) {
+                feedbackTextarea.value = generateFeedback();
+            }
+        });
+
+        // Добавляем обработчик для кнопки копирования
+        document.getElementById('copyFeedbackBtn').addEventListener('click', function() {
+            const feedbackTextarea = document.getElementById('feedback');
+            feedbackTextarea.select();
+            document.execCommand('copy');
+            
+            // Меняем иконку на галочку на короткое время
+            const icon = this.querySelector('i');
+            icon.classList.remove('bi-clipboard');
+            icon.classList.add('bi-clipboard-check');
+            
+            setTimeout(() => {
+                icon.classList.remove('bi-clipboard-check');
+                icon.classList.add('bi-clipboard');
+            }, 1500);
+        });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
