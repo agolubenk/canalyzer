@@ -984,54 +984,59 @@
             
             const steps = [
                 {
-                    question: 'Какие базовые метрики вы используете для оценки эффективности рекрутинга?',
-                    correctAnswer: 'Время до найма (Time to Hire) и стоимость найма (Cost per Hire)',
+                    question: 'Базовые метрики\n\nУсловие:\nЗа месяц на вакансию Frontend-разработчик поступило:\n- 150 откликов\n- 50 приглашений на интервью\n- 15 выходов на оффер\n- 8 принятых предложений\n\nКакая метрика показывает эффективность финального этапа?',
                     options: [
-                        'Только количество откликов на вакансию',
-                        'Время до найма (Time to Hire) и стоимость найма (Cost per Hire)',
-                        'Только качество найма (Quality of Hire)',
-                        'Только удовлетворенность кандидатов'
-                    ]
+                        { text: 'Конверсия из откликов в приглашения', score: 0 },
+                        { text: 'Конверсия из интервью в офферы', score: 2, correct: true },
+                        { text: 'Cost-per-hire', score: 0 },
+                        { text: 'Среднее время закрытия вакансии', score: 0 },
+                        { text: 'Количество просмотров вакансии', score: 0 }
+                    ],
+                    explanation: 'Эта метрика отражает, насколько успешно проходят финальные этапы отбора. Низкая конверсия может указывать на проблемы в интервью-процессе или завышенные требования.'
                 },
                 {
-                    question: 'Как вы оцениваете качество найма (Quality of Hire)?',
-                    correctAnswer: 'Через оценку производительности, удержания и адаптации нового сотрудника',
+                    question: 'Анализ воронки рекрутинга\n\nУсловие:\nВоронка за месяц:\nОтклики: 300 → Приглашения: 90 → Интервью: 30 → Офферы: 6 → Выходы: 3\n\nКакое действие наиболее эффективно для улучшения конверсии?',
                     options: [
-                        'Только по результатам испытательного срока',
-                        'Через оценку производительности, удержания и адаптации нового сотрудника',
-                        'Только по отзывам руководителя',
-                        'Только по скорости выхода на работу'
-                    ]
+                        { text: 'Увеличить бюджет на рекламу вакансий', score: 0 },
+                        { text: 'Переписать описание вакансии для привлечения релевантных кандидатов', score: 2, correct: true },
+                        { text: 'Сократить количество этапов интервью', score: 0 },
+                        { text: 'Повысить зарплату в оффере', score: 0 },
+                        { text: 'Ускорить процесс согласования оффера', score: 0 }
+                    ],
+                    explanation: 'Конверсия из откликов в приглашения всего 30% (90/300), что ниже нормы. Проблема, скорее всего, в нерелевантных откликах из-за неточного описания вакансии.'
                 },
                 {
-                    question: 'Какие метрики используются для оценки эффективности источников найма?',
-                    correctAnswer: 'Конверсия кандидатов, стоимость найма, качество найма и время до найма',
+                    question: 'Расчет cost-per-hire\n\nУсловие:\nНа закрытие вакансии потрачено:\n- LinkedIn Ads: $500 (5 наймов)\n- Хантинг: $300 (3 найма)\n- Рекомендации: $100 (2 найма)\n\nКакой источник самый экономически эффективный?',
                     options: [
-                        'Только количество откликов с каждого источника',
-                        'Только стоимость найма с каждого источника',
-                        'Конверсия кандидатов, стоимость найма, качество найма и время до найма',
-                        'Только время до найма с каждого источника'
-                    ]
+                        { text: 'LinkedIn Ads', score: 0 },
+                        { text: 'Хантинг', score: 0 },
+                        { text: 'Рекомендации', score: 2, correct: true },
+                        { text: 'Все одинаковы', score: 0 },
+                        { text: 'Недостаточно данных', score: 0 }
+                    ],
+                    explanation: 'LinkedIn: $500/5 = $100 за найм\nХантинг: $300/3 = $100 за найм\nРекомендации: $100/2 = $50 за найм'
                 },
                 {
-                    question: 'Как вы анализируете эффективность процесса найма?',
-                    correctAnswer: 'Через анализ воронки найма, выявление узких мест и оптимизацию каждого этапа',
+                    question: 'Предиктивная аналитика\n\nУсловие:\nСреднее время закрытия вакансии Data Scientist — 45 дней. В текущем месяце:\n- 10 открытых вакансий\n- 30% кандидатов отсеиваются на этапе технического интервью\n- Загрузка рекрутеров: 80%\n\nКакой прогноз времени закрытия будет наиболее точным?',
                     options: [
-                        'Только по общему времени найма',
-                        'Только по стоимости найма',
-                        'Через анализ воронки найма, выявление узких мест и оптимизацию каждого этапа',
-                        'Только по количеству закрытых позиций'
-                    ]
+                        { text: '35 дней (оптимистичный сценарий)', score: 0 },
+                        { text: '45 дней (базовый сценарий)', score: 0 },
+                        { text: '55 дней (пессимистичный сценарий)', score: 2, correct: true },
+                        { text: '60 дней (крайне негативный сценарий)', score: 0 },
+                        { text: 'Недостаточно данных для прогноза', score: 0 }
+                    ],
+                    explanation: 'Высокая загрузка рекрутеров (80%) и большой процент отсева на техинтервью увеличивают время закрытия. Базовый сценарий не учитывает эти факторы.'
                 },
                 {
-                    question: 'Какие предиктивные метрики вы используете для прогнозирования успешности найма?',
-                    correctAnswer: 'Анализ исторических данных, трендов рынка и корреляций между различными факторами',
+                    question: 'Анализ эффективности каналов найма\n\nУсловие:\nДанные по трем каналам найма за квартал:\n- Работные сайты: 1000 откликов, 50 наймов, бюджет $2000\n- Реферальная программа: 200 откликов, 30 наймов, бюджет $1500\n- Социальные сети: 500 откликов, 20 наймов, бюджет $1000\n\nКакой канал наиболее эффективен с точки зрения качества входящего потока?',
                     options: [
-                        'Только исторические данные по времени найма',
-                        'Только данные по стоимости найма',
-                        'Анализ исторических данных, трендов рынка и корреляций между различными факторами',
-                        'Только данные по источникам найма'
-                    ]
+                        { text: 'Работные сайты (5% конверсия)', score: 0 },
+                        { text: 'Реферальная программа (15% конверсия)', score: 2, correct: true },
+                        { text: 'Социальные сети (4% конверсия)', score: 0 },
+                        { text: 'Все каналы одинаково эффективны', score: 0 },
+                        { text: 'Нужны дополнительные метрики', score: 0 }
+                    ],
+                    explanation: 'Реферальная программа показывает наивысшую конверсию из отклика в найм (15%), что говорит о более качественном входящем потоке кандидатов. Это подтверждает эффективность рекомендаций от сотрудников.'
                 }
             ];
             
@@ -1046,12 +1051,12 @@
                                 Вопрос ${stepIndex + 1} из ${steps.length}
                             </div>
                         </div>
-                        <h5>${step.question}</h5>
+                        <div class="question-text mb-4" style="white-space: pre-line;">${step.question}</div>
                         
                         <div class="test-task-options">
                             ${step.options.map((option, index) => `
                                 <div class="test-task-option" data-index="${index}">
-                                    ${option}
+                                    ${option.text}
                                 </div>
                             `).join('')}
                         </div>
@@ -1066,98 +1071,65 @@
                     });
                 });
                 
-                // Обновляем кнопку только если тест не завершен
-                if (stepIndex < steps.length) {
-                    submitButton.innerHTML = '<i class="bi bi-check-circle"></i> Ответить';
-                    submitButton.className = 'btn btn-primary';
-                    submitButton.onclick = function() {
-                        const selectedOption = modalBody.querySelector('.test-task-option.selected');
-                        if (!selectedOption) {
-                            alert('Пожалуйста, выберите ответ');
-                            return;
-                        }
-                        
-                        const selectedAnswer = selectedOption.textContent.trim();
-                        const isCorrect = selectedAnswer === step.correctAnswer;
-                        
-                        if (isCorrect) {
-                            totalScore += 2;
-                            if (stepIndex < steps.length - 1) {
-                                currentStep++;
-                                showStep(currentStep);
-                            } else {
-                                finishTest();
-                            }
-                        } else {
-                            finishTest();
-                        }
-                    };
-                }
+                submitButton.innerHTML = stepIndex < steps.length - 1 ? 'Следующий вопрос' : 'Завершить тест';
+                submitButton.onclick = function() {
+                    const selectedOption = modalBody.querySelector('.test-task-option.selected');
+                    if (!selectedOption) {
+                        alert('Пожалуйста, выберите ответ');
+                        return;
+                    }
+                    
+                    const optionIndex = parseInt(selectedOption.getAttribute('data-index'));
+                    const selectedAnswer = step.options[optionIndex];
+                    
+                    if (selectedAnswer.correct) {
+                        totalScore += selectedAnswer.score;
+                    }
+                    
+                    if (stepIndex < steps.length - 1) {
+                        currentStep++;
+                        showStep(currentStep);
+                    } else {
+                        finishTest();
+                    }
+                };
             }
             
             function finishTest() {
-                // Очищаем все содержимое модального окна
-                modalBody.innerHTML = '';
+                const finalScore = Math.round((totalScore / (steps.length * 2)) * 10);
                 
-                // Создаем новый контейнер для результатов
-                const resultsContainer = document.createElement('div');
-                resultsContainer.className = 'test-task final-results';
-                
-                // Добавляем прогресс-бар
-                const progressBar = document.createElement('div');
-                progressBar.className = 'progress mb-3';
-                progressBar.innerHTML = `
-                    <div class="progress-bar bg-success" role="progressbar" style="width: 100%" 
-                         aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
-                        Тест завершен
+                modalBody.innerHTML = `
+                    <div class="test-task final-results">
+                        <div class="progress mb-3">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: 100%" 
+                                 aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                Тест завершен
+                            </div>
+                        </div>
+                        
+                        <h5>Результаты тестирования</h5>
+                        <div class="score-summary">
+                            <h6>Итоговая оценка: ${finalScore}/10</h6>
+                            <p class="score-explanation">
+                                ${finalScore <= 3 ? 'Уровень Junior (J): Базовое понимание метрик.' :
+                                  finalScore <= 5 ? 'Уровень Middle (M): Хороший анализ воронки и принятие решений.' :
+                                  finalScore <= 7 ? 'Уровень Senior (S): Уверенное владение экономическими расчетами.' :
+                                  finalScore <= 9 ? 'Уровень Senior+ (S+): Отличное понимание предиктивной аналитики.' :
+                                  'Уровень Lead (L): Экспертное владение всеми аспектами HR-аналитики.'}
+                            </p>
+                        </div>
                     </div>
                 `;
                 
-                // Добавляем заголовок
-                const title = document.createElement('h5');
-                title.textContent = 'Результаты тестирования';
+                // Обновляем оценку навыка если результат лучше текущего
+                if (finalScore > currentScore) {
+                    updateSkillScore(skillId, finalScore);
+                }
                 
-                // Добавляем блок с результатами
-                const scoreSummary = document.createElement('div');
-                scoreSummary.className = 'score-summary';
-                scoreSummary.innerHTML = `
-                    <h6>Итоговая оценка: ${totalScore}/10</h6>
-                    <p class="score-explanation">
-                        ${totalScore <= 2 ? 'Начальный уровень: требуется значительное улучшение навыков аналитики' :
-                          totalScore <= 4 ? 'Базовый уровень: есть понимание основных метрик, но нужна практика' :
-                          totalScore <= 6 ? 'Средний уровень: хорошее понимание аналитики, есть потенциал для роста' :
-                          totalScore <= 8 ? 'Продвинутый уровень: отличное понимание аналитики и современных подходов' :
-                          'Экспертный уровень: превосходное владение аналитическими навыками'}
-                    </p>
-                `;
-                
-                // Собираем все элементы
-                resultsContainer.appendChild(progressBar);
-                resultsContainer.appendChild(title);
-                resultsContainer.appendChild(scoreSummary);
-                
-                // Добавляем результаты в модальное окно
-                modalBody.appendChild(resultsContainer);
-                
-                // Обновляем оценку навыка
-                updateSkillScore(skillId, totalScore);
-                
-                // Настраиваем кнопки в футере модального окна
-                const modalFooter = document.querySelector('#analyticsTaskModal .modal-footer');
-                const closeButton = modalFooter.querySelector('button[data-bs-dismiss="modal"]');
-                const submitButton = modalFooter.querySelector('#analyticsTaskSubmit');
-                
-                // Показываем только кнопку закрытия и скрываем кнопку ответить
-                closeButton.style.display = 'block';
-                submitButton.style.display = 'none';
-                
-                // Обновляем обработчик закрытия
-                closeButton.onclick = function() {
+                submitButton.textContent = 'Закрыть';
+                submitButton.onclick = function() {
                     analyticsModal.hide();
                 };
-                
-                // Удаляем все обработчики событий с кнопки ответить
-                submitButton.replaceWith(submitButton.cloneNode(true));
             }
             
             showStep(currentStep);
