@@ -1349,33 +1349,33 @@
         const roadmapTask = {
             questions: [
                 {
-                    question: "Как бы вы структурировали процесс разработки roadmap для найма на квартал?",
+                    question: "Построение Roadmap (Уровень J+/M)\n\nУсловие:\nНужно закрыть 3 вакансии Middle Python-разработчика за 2 месяца.\n\n• Среднее время закрытия 1 вакансии: 30 дней\n• Текущая конверсия воронки: 15% (отклики → выходы)\n• Еженедельно поступает 20 откликов\n\nСколько минимум откликов нужно получить, чтобы закрыть все вакансии?",
                     options: [
-                        { text: "Создать статичный план на весь квартал", score: 2 },
-                        { text: "Разработать план с ежемесячной корректировкой", score: 4 },
-                        { text: "Использовать Agile-подход с двухнедельными итерациями", score: 5 },
-                        { text: "Планировать только на месяц вперед", score: 3 },
-                        { text: "Создать гибкий план с возможностью быстрой адаптации", score: 4 }
+                        { text: '60', score: 1, feedback: 'Недостаточно откликов для достижения цели с учетом конверсии.' },
+                        { text: '100', score: 2, feedback: 'Близко, но не учтена полная потребность в откликах.' },
+                        { text: '133', score: 5, feedback: 'Верно! На 1 выход нужно 6.67 откликов, на 3 вакансии: 3 × 6.67 ≈ 20 → 20 / 0.15 ≈ 133' },
+                        { text: '200', score: 3, feedback: 'Завышенная оценка, хотя обеспечивает запас.' },
+                        { text: '250', score: 2, feedback: 'Значительно завышенная оценка, неэффективное использование ресурсов.' }
                     ]
                 },
                 {
-                    question: "Какие метрики вы бы использовали для анализа эффективности roadmap?",
+                    question: 'Применение SWOT (Уровень M+/S)\n\nУсловие:\nSWOT-анализ показал:\n\n• Сила: Быстрый процесс согласования офферов (2 дня)\n• Слабость: Низкое качество откликов с job-порталов\n• Возможность: Партнерство с IT-сообществами\n• Угроза: Рост конкуренции за разработчиков\n\nКакое решение лучше всего устранит слабость?',
                     options: [
-                        { text: "Только процент выполнения плана", score: 2 },
-                        { text: "Комбинация количественных и качественных показателей", score: 5 },
-                        { text: "Только время закрытия позиций", score: 3 },
-                        { text: "Стоимость найма и качество кандидатов", score: 4 },
-                        { text: "Удовлетворенность менеджеров", score: 3 }
+                        { text: 'Увеличить бюджет на LinkedIn Ads', score: 2, feedback: 'Увеличение бюджета не гарантирует улучшение качества откликов.' },
+                        { text: 'Внедрить технический скрининг до интервью', score: 5, feedback: 'Верно! Технический скрининг поможет отфильтровать нерелевантные отклики на ранней стадии.' },
+                        { text: 'Провести митап с IT-сообществом', score: 3, feedback: 'Хорошая идея для долгосрочной перспективы, но не решает текущую проблему качества откликов.' },
+                        { text: 'Повысить зарплату в офферах', score: 1, feedback: 'Не решает проблему качества входящих откликов.' },
+                        { text: 'Сократить этапы интервью', score: 1, feedback: 'Может ухудшить качество отбора.' }
                     ]
                 },
                 {
-                    question: "Как бы вы интегрировали анализ данных в процесс разработки roadmap?",
+                    question: 'PESTEL-анализ (Уровень S+/L)\n\nУсловие:\nКомпания планирует нанять 10 DevOps-инженеров в Польше. Факторы:\n\n• Политика: Ужесточение визового режима для не-EU граждан\n• Экономика: Рост зарплат на 20% в 2024\n• Технологии: Популярность Kubernetes в регионе\n\nКакой стратегический шаг критически важен?',
                     options: [
-                        { text: "Использую только исторические данные", score: 2 },
-                        { text: "Применять предиктивную аналитику", score: 5 },
-                        { text: "Анализировать текущие тренды рынка", score: 4 },
-                        { text: "Учитывать только внутренние метрики", score: 3 },
-                        { text: "Комбинировать различные источники данных", score: 4 }
+                        { text: 'Нанять релокационных кандидатов из Азии', score: 2, feedback: 'Усложняется визовым режимом, не решает проблему роста зарплат.' },
+                        { text: 'Пересмотреть зарплатный бюджет', score: 5, feedback: 'Верно! Экономический фактор роста зарплат требует немедленной корректировки бюджета.' },
+                        { text: 'Провести обучение Kubernetes для HR-команды', score: 3, feedback: 'Полезно, но не критично в текущей ситуации.' },
+                        { text: 'Ускорить процесс выдачи офферов', score: 2, feedback: 'Не решает основные выявленные проблемы.' },
+                        { text: 'Сократить число вакансий', score: 1, feedback: 'Избегание проблемы вместо её решения.' }
                     ]
                 }
             ]
@@ -1459,33 +1459,33 @@
             let currentQuestion = 0;
             const questions = [
                 {
-                    question: 'Как вы структурируете процесс разработки roadmap?',
+                    question: 'Построение Roadmap (Уровень J+/M)\n\nУсловие:\nНужно закрыть 3 вакансии Middle Python-разработчика за 2 месяца.\n\n• Среднее время закрытия 1 вакансии: 30 дней\n• Текущая конверсия воронки: 15% (отклики → выходы)\n• Еженедельно поступает 20 откликов\n\nСколько минимум откликов нужно получить, чтобы закрыть все вакансии?',
                     options: [
-                        { text: 'Использую только статический план на год вперед', score: 1, feedback: 'Статический план не учитывает изменения рынка и потребностей.' },
-                        { text: 'Разбиваю на кварталы с возможностью корректировки', score: 2, feedback: 'Хороший базовый подход с некоторой гибкостью.' },
-                        { text: 'Применяю Agile-подход с регулярными итерациями', score: 3, feedback: 'Хороший подход с адаптивностью.' },
-                        { text: 'Комбинирую долгосрочное планирование с гибкими итерациями', score: 4, feedback: 'Отличный подход, балансирующий стратегию и тактику.' },
-                        { text: 'Использую адаптивный подход с учетом обратной связи', score: 5, feedback: 'Превосходный подход с максимальной гибкостью и учетом обратной связи.' }
+                        { text: '60', score: 1, feedback: 'Недостаточно откликов для достижения цели с учетом конверсии.' },
+                        { text: '100', score: 2, feedback: 'Близко, но не учтена полная потребность в откликах.' },
+                        { text: '133', score: 5, feedback: 'Верно! На 1 выход нужно 6.67 откликов, на 3 вакансии: 3 × 6.67 ≈ 20 → 20 / 0.15 ≈ 133' },
+                        { text: '200', score: 3, feedback: 'Завышенная оценка, хотя обеспечивает запас.' },
+                        { text: '250', score: 2, feedback: 'Значительно завышенная оценка, неэффективное использование ресурсов.' }
                     ]
                 },
                 {
-                    question: 'Какие метрики вы используете для оценки эффективности roadmap?',
+                    question: 'Применение SWOT (Уровень M+/S)\n\nУсловие:\nSWOT-анализ показал:\n\n• Сила: Быстрый процесс согласования офферов (2 дня)\n• Слабость: Низкое качество откликов с job-порталов\n• Возможность: Партнерство с IT-сообществами\n• Угроза: Рост конкуренции за разработчиков\n\nКакое решение лучше всего устранит слабость?',
                     options: [
-                        { text: 'Только количественные показатели', score: 1, feedback: 'Недостаточно комплексный подход к оценке.' },
-                        { text: 'Комбинация количественных и качественных метрик', score: 2, feedback: 'Хороший базовый подход к оценке.' },
-                        { text: 'Система KPI с регулярным мониторингом', score: 3, feedback: 'Хороший подход с систематическим мониторингом.' },
-                        { text: 'Комплексная система метрик с анализом трендов', score: 4, feedback: 'Отличный подход с глубоким анализом.' },
-                        { text: 'Многоуровневая система оценки с предиктивной аналитикой', score: 5, feedback: 'Превосходный подход с использованием передовых методов анализа.' }
+                        { text: 'Увеличить бюджет на LinkedIn Ads', score: 2, feedback: 'Увеличение бюджета не гарантирует улучшение качества откликов.' },
+                        { text: 'Внедрить технический скрининг до интервью', score: 5, feedback: 'Верно! Технический скрининг поможет отфильтровать нерелевантные отклики на ранней стадии.' },
+                        { text: 'Провести митап с IT-сообществом', score: 3, feedback: 'Хорошая идея для долгосрочной перспективы, но не решает текущую проблему качества откликов.' },
+                        { text: 'Повысить зарплату в офферах', score: 1, feedback: 'Не решает проблему качества входящих откликов.' },
+                        { text: 'Сократить этапы интервью', score: 1, feedback: 'Может ухудшить качество отбора.' }
                     ]
                 },
                 {
-                    question: 'Как вы интегрируете анализ данных в процесс разработки roadmap?',
+                    question: 'PESTEL-анализ (Уровень S+/L)\n\nУсловие:\nКомпания планирует нанять 10 DevOps-инженеров в Польше. Факторы:\n\n• Политика: Ужесточение визового режима для не-EU граждан\n• Экономика: Рост зарплат на 20% в 2024\n• Технологии: Популярность Kubernetes в регионе\n\nКакой стратегический шаг критически важен?',
                     options: [
-                        { text: 'Использую только исторические данные', score: 1, feedback: 'Недостаточно комплексный подход к анализу данных.' },
-                        { text: 'Анализирую текущие тренды и паттерны', score: 2, feedback: 'Хороший базовый подход к анализу.' },
-                        { text: 'Применяю предиктивную аналитику', score: 3, feedback: 'Хороший подход с использованием современных методов.' },
-                        { text: 'Комбинирую различные источники данных', score: 4, feedback: 'Отличный подход с комплексным анализом.' },
-                        { text: 'Использую комплексный подход с машинным обучением', score: 5, feedback: 'Превосходный подход с использованием передовых технологий.' }
+                        { text: 'Нанять релокационных кандидатов из Азии', score: 2, feedback: 'Усложняется визовым режимом, не решает проблему роста зарплат.' },
+                        { text: 'Пересмотреть зарплатный бюджет', score: 5, feedback: 'Верно! Экономический фактор роста зарплат требует немедленной корректировки бюджета.' },
+                        { text: 'Провести обучение Kubernetes для HR-команды', score: 3, feedback: 'Полезно, но не критично в текущей ситуации.' },
+                        { text: 'Ускорить процесс выдачи офферов', score: 2, feedback: 'Не решает основные выявленные проблемы.' },
+                        { text: 'Сократить число вакансий', score: 1, feedback: 'Избегание проблемы вместо её решения.' }
                     ]
                 }
             ];
@@ -1839,7 +1839,6 @@
                 // DevOps
                 { id: 'docker', text: 'Docker', category: 'devops' },
                 { id: 'kubernetes', text: 'Kubernetes', category: 'devops' },
-                { id: 'jenkins', text: 'Jenkins', category: 'devops' },
                 { id: 'terraform', text: 'Terraform', category: 'devops' },
                 { id: 'ansible', text: 'Ansible', category: 'devops' },
                 { id: 'prometheus', text: 'Prometheus', category: 'devops' },
@@ -1857,7 +1856,6 @@
                 { id: 'redux', text: 'Redux', category: 'frontend' },
                 { id: 'js-code', text: 'const App = () => {\n  const [state, setState] = useState();\n  return <div>Hello</div>;\n}', category: 'frontend', isCode: true },
                 { id: 'css-code', text: '.container {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n}', category: 'frontend', isCode: true },
-                { id: 'html-code', text: '<div class="container">\n  <header>\n    <nav>...</nav>\n  </header>\n</div>', category: 'frontend', isCode: true },
                 { id: 'nextjs', text: 'Next.js', category: 'frontend' },
                 
                 // Python
@@ -1874,11 +1872,7 @@
                 
                 // QA
                 { id: 'selenium', text: 'Selenium', category: 'qa' },
-                { id: 'jira', text: 'Jira', category: 'qa' },
                 { id: 'postman', text: 'Postman', category: 'qa' },
-                { id: 'jenkins-qa', text: 'Jenkins', category: 'qa' },
-                { id: 'git', text: 'Git', category: 'qa' },
-                { id: 'confluence', text: 'Confluence', category: 'qa' },
                 { id: 'cypress', text: 'Cypress', category: 'qa' },
                 { id: 'playwright', text: 'Playwright', category: 'qa' },
                 { id: 'testng', text: 'TestNG', category: 'qa' },
@@ -2186,10 +2180,10 @@
             
             // Правильные ответы для каждой категории
             const correctAnswers = {
-                'devops': ['Docker', 'Kubernetes', 'Jenkins', 'Terraform', 'Ansible', 'Prometheus'],
-                'frontend': ['React', 'Vue.js', 'Angular', 'TypeScript', 'Webpack', 'Redux'],
-                'python': ['Django', 'Flask', 'FastAPI', 'Pandas', 'NumPy', 'PyTest'],
-                'qa': ['Selenium', 'Jira', 'Postman', 'Jenkins', 'Git', 'Confluence']
+                'devops': ['Docker', 'Kubernetes', 'Terraform', 'Ansible', 'Prometheus', 'GitLab CI', 'AWS', 'Bash скрипт', 'Dockerfile'],
+                'frontend': ['React', 'Vue.js', 'Angular', 'TypeScript', 'Webpack', 'Redux', 'Sass', 'Bootstrap', 'JavaScript код', 'CSS стили'],
+                'python': ['Django', 'Flask', 'FastAPI', 'Pandas', 'NumPy', 'PyTest', 'SQLAlchemy', 'Celery'],
+                'qa': ['Selenium', 'Postman', 'Cypress', 'TestNG']
             };
             
             // Анализ по категориям
@@ -2295,7 +2289,6 @@
             // DevOps
             { name: 'Docker', category: 'devops', type: 'icon', icon: 'bi-box' },
             { name: 'Kubernetes', category: 'devops', type: 'icon', icon: 'bi-diagram-3' },
-            { name: 'Jenkins', category: 'devops', type: 'icon', icon: 'bi-gear' },
             { name: 'Terraform', category: 'devops', type: 'icon', icon: 'bi-cloud' },
             { name: 'Ansible', category: 'devops', type: 'icon', icon: 'bi-diagram-2' },
             { name: 'Prometheus', category: 'devops', type: 'icon', icon: 'bi-graph-up' },
@@ -2315,7 +2308,6 @@
             { name: 'Bootstrap', category: 'frontend', type: 'icon', icon: 'bi-grid' },
             { name: 'JavaScript код', category: 'frontend', type: 'code', code: 'const greeting = (name) => {\n  return `Hello, ${name}!`;\n};\nconsole.log(greeting("World"));' },
             { name: 'CSS стили', category: 'frontend', type: 'code', code: '.button {\n  background: #007bff;\n  color: white;\n  padding: 10px 20px;\n  border-radius: 5px;\n}' },
-            { name: 'HTML разметка', category: 'frontend', type: 'code', code: '<div class="container">\n  <h1>Welcome</h1>\n  <p>This is a sample page</p>\n</div>' },
             
             // Python
             { name: 'Django', category: 'python', type: 'icon', icon: 'bi-filetype-py' },
@@ -2330,11 +2322,7 @@
             
             // QA
             { name: 'Selenium', category: 'qa', type: 'icon', icon: 'bi-browser-chrome' },
-            { name: 'Jira', category: 'qa', type: 'icon', icon: 'bi-kanban' },
             { name: 'Postman', category: 'qa', type: 'icon', icon: 'bi-send' },
-            { name: 'Jenkins', category: 'qa', type: 'icon', icon: 'bi-gear' },
-            { name: 'Git', category: 'qa', type: 'icon', icon: 'bi-git' },
-            { name: 'Confluence', category: 'qa', type: 'icon', icon: 'bi-file-text' },
             { name: 'Cypress', category: 'qa', type: 'icon', icon: 'bi-check2-square' },
             { name: 'TestNG', category: 'qa', type: 'icon', icon: 'bi-list-check' },
             
