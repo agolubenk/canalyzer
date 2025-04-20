@@ -1352,31 +1352,64 @@
             });
 
             function calculateFinalScore(correctCount, totalCount, moveCount) {
-                const percentCorrect = (correctCount / totalCount) * 100;
-                const minRequiredCards = 20;
-                
-                // Если распределено меньше 20 карток, возвращаем 0
-                if (totalCount < minRequiredCards) {
-                    return 0;
-                }
+                // Подсчитываем количество правильно размещенных карточек в основных группах
+                let correctInMainGroups = 0;
+                ['devops', 'frontend', 'python', 'qa'].forEach(category => {
+                    const categoryElement = document.querySelector(`.tech-category[data-category="${category}"]`);
+                    if (categoryElement) {
+                        correctInMainGroups += categoryElement.querySelectorAll('.tech-card.correct').length;
+                    }
+                });
 
-                // Если процент правильных ответов меньше 100%, оцениваем по проценту
-                if (percentCorrect < 100) {
-                    return Math.min(5, Math.ceil(percentCorrect / 20));
+                // Считаем баллы за количество перемещений (40%)
+                let moveScore = 0;
+                const maxAllowedMoves = correctInMainGroups + 1;
+                if (moveCount <= maxAllowedMoves) {
+                    moveScore = 100;
+                } else {
+                    moveScore = Math.max(0, 100 - ((moveCount - maxAllowedMoves) * 4));
                 }
+                const weightedMoveScore = (moveScore * 0.4);
 
-                // Если все карточки расположены правильно, оцениваем по количеству перемещений
-                if (moveCount <= 21) return 10;
-                if (moveCount <= 24) return 9;
-                if (moveCount <= 27) return 8;
-                if (moveCount <= 30) return 7;
-                if (moveCount <= 33) return 6;
-                if (moveCount <= 36) return 5;
-                if (moveCount <= 39) return 4;
-                if (moveCount <= 42) return 3;
-                if (moveCount <= 45) return 2;
-                return 1;
+                // Считаем баллы за количество верно распределенных карточек в основных группах (25%)
+                const mainGroupsScore = (correctInMainGroups / totalCount) * 100;
+                const weightedMainGroupsScore = (mainGroupsScore * 0.25);
+
+                // Считаем баллы за процент правильных ответов (35%)
+                const correctAnswersScore = (correctCount / totalCount) * 100;
+                const weightedCorrectAnswersScore = (correctAnswersScore * 0.35);
+
+                // Считаем итоговый процент
+                const totalPercentage = weightedMoveScore + weightedMainGroupsScore + weightedCorrectAnswersScore;
+
+                // Переводим проценты в баллы от 0 до 10
+                return Math.round(totalPercentage / 10);
             }
+
+            // Обновляем обработчик кнопки проверки
+            submitButton.style.display = 'none'; // Изначально скрываем кнопку
+            
+            // Функция для проверки количества распределенных карточек
+            function checkDistributedCards() {
+                let totalDistributed = 0;
+                categories.forEach(category => {
+                    totalDistributed += category.querySelectorAll('.tech-card').length;
+                });
+                submitButton.style.display = totalDistributed >= 10 ? 'block' : 'none';
+            }
+
+            // Добавляем проверку при каждом перемещении карточки
+            categories.forEach(category => {
+                category.addEventListener('drop', function(e) {
+                    // ... existing drop logic ...
+                    checkDistributedCards();
+                });
+            });
+
+            cardsPool.addEventListener('drop', function(e) {
+                // ... existing drop logic ...
+                checkDistributedCards();
+            });
 
             function getScoreDescription(score, distributedCards) {
                 if (distributedCards < 20) {
