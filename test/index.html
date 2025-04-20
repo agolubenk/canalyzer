@@ -778,7 +778,11 @@
                 const semanticScore = {
                     python: (normalizedQuery.includes('python developer') || 
                             normalizedQuery.includes('python devloper') || 
-                            normalizedQuery.includes('python разработчик')) ? 1 : 0,
+                            normalizedQuery.includes('python разработчик') ||
+                            (normalizedQuery.includes('python') && 
+                             (normalizedQuery.includes('"developer"') || 
+                              normalizedQuery.includes('"devloper"') || 
+                              normalizedQuery.includes('"разработчик"')))) ? 1 : 0,
                     django: (normalizedQuery.includes('django') || 
                             normalizedQuery.includes('drf') || 
                             normalizedQuery.includes('flask')) ? 1 : 0,
@@ -802,14 +806,24 @@
                             normalizedQuery.includes('-работа') || 
                             normalizedQuery.includes('-recruiter') || 
                             normalizedQuery.includes('-recruitment') ||
-                             normalizedQuery.includes('-hr') ||
-                             normalizedQuery.includes('-рекрутер') ||
-                             normalizedQuery.includes('-найм') ||
-                             normalizedQuery.includes('-hiring')) ? 1 : 0,
-                    location: (normalizedQuery.includes('russia') || 
-                              normalizedQuery.includes('site:ru.linkedin.com/in') ||
-                              normalizedQuery.includes('россия')) ? 1 : 0,
-                    domain: normalizedQuery.includes('site:ru.linkedin.com/in') ? 1 : 0
+                            normalizedQuery.includes('-hr') ||
+                            normalizedQuery.includes('-рекрутер') ||
+                            normalizedQuery.includes('-найм') ||
+                            normalizedQuery.includes('-hiring')) ? 1 : 0,
+                    // Обновленная проверка локации и домена
+                    location: (
+                        // Вариант с субдоменом ru.linkedin.com
+                        normalizedQuery.includes('site:ru.linkedin.com/in') ||
+                        // Вариант с явным указанием страны
+                        (normalizedQuery.includes('site:linkedin.com/in') && 
+                         (normalizedQuery.includes('russia') || 
+                          normalizedQuery.includes('россия')))
+                    ) ? 1 : 0,
+                    // Проверка домена теперь учитывает оба варианта
+                    domain: (
+                        normalizedQuery.includes('site:ru.linkedin.com/in') ||
+                        normalizedQuery.includes('site:linkedin.com/in')
+                    ) ? 1 : 0
                 };
 
                 // Проверка структуры запроса
