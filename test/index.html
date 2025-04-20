@@ -457,7 +457,7 @@
 - Поиск только на территории России
 - Использовать только LinkedIn как источник
 - Запрос должен быть эффективным и точным`,
-            example: `site:ru.linkedin.com/in ("Python Developer" OR "Python Devloper" OR "Python разработчик") AND (Django OR "Django Framework" OR "Django REST Framework" OR "DRF" OR "Flask") AND ("microservices" OR "micro-service" OR "micro service" OR "микросервисы") AND ("5 years" OR "5+ years" OR "five years" OR "senior") AND ("fintech" OR "bank" OR "banking" OR "финтех" OR "банк" OR "банкинг") AND (Russia OR "Россия" ) -job -jobs -recruiter -recruitment -hr -рекрутер -найм -hiring`
+            example: `site:ru.linkedin.com/in AND "Python" AND ("Developer" OR "Devloper" OR "Разработчик") AND ("Django" OR DRF OR "Flask") AND ("Fintech" OR "финтех" OR bank OR банк) AND ("microservises" OR "микросервисы" OR "micro-services") AND ("5 years" OR "5 лет" OR "senior") -job -работа -HR -Recruiter -vacancy -вакансия`
         };
 
         // Функции открытия тестовых заданий
@@ -768,9 +768,10 @@
                 const operatorScore = {
                     site: normalizedQuery.includes('site:') ? 1 : 0,
                     quotes: (normalizedQuery.match(/"[^"]+"/g) || []).length > 0 ? 1 : 0,
-                    and: normalizedQuery.includes(' AND ') ? 1 : 0,
-                    or: normalizedQuery.includes(' OR ') ? 1 : 0,
-                    not: normalizedQuery.includes(' -') ? 1 : 0
+                    // Используем более точные регулярные выражения для поиска операторов
+                    and: /\b(AND)\b/i.test(normalizedQuery) ? 1 : 0,
+                    or: /\b(OR)\b/i.test(normalizedQuery) ? 1 : 0,
+                    not: /(?:^|\s)-\w+/.test(normalizedQuery) ? 1 : 0
                 };
 
                 // Проверка семантических элементов
@@ -869,13 +870,14 @@
                 if (!operatorScore.quotes) {
                     feedback.push('Используйте кавычки для точных фраз');
                 }
-                if (!operatorScore.and) {
+                // Возвращаем проверки операторов с использованием тех же регулярных выражений
+                if (!/\b(AND)\b/i.test(normalizedQuery)) {
                     feedback.push('Используйте оператор AND для объединения условий');
                 }
-                if (!operatorScore.or) {
+                if (!/\b(OR)\b/i.test(normalizedQuery)) {
                     feedback.push('Используйте оператор OR для альтернативных условий');
                 }
-                if (!operatorScore.not) {
+                if (!/(?:^|\s)-\w+/.test(normalizedQuery)) {
                     feedback.push('Используйте оператор - для исключения');
                 }
 
@@ -961,7 +963,7 @@
                         
                         ${feedback.length > 0 ? `
                             <div class="feedback-section mb-4">
-                                <h6 class="text-primary">Рекомендации по улучшению:</h6>
+                                <h6 class="text-primary">Общие рекомендации по улучшению:</h6>
                                 <ul class="feedback-list">
                                     ${feedback.map(item => `<li>${item}</li>`).join('')}
                                 </ul>
