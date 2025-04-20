@@ -77,15 +77,31 @@
             padding: 15px;
             background-color: #f8f9fa;
             transition: all 0.2s ease;
+            position: relative;
+        }
+        .tech-category h6 {
+            position: sticky;
+            top: 0;
+            background: linear-gradient(to bottom, #f8f9fa 85%, rgba(248, 249, 250, 0.9));
+            margin: -15px -15px 15px -15px;
+            padding: 15px;
+            border-radius: 8px 8px 0 0;
+            border-bottom: 2px dashed #e9ecef;
+            text-align: center;
+            font-weight: 600;
+            color: #495057;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 1;
+            transition: all 0.2s ease;
         }
         .tech-category.drag-over {
             border-color: #0d6efd;
             background-color: #e7f1ff;
         }
-        .tech-category h6 {
-            margin-bottom: 15px;
-            text-align: center;
-            color: #495057;
+        .tech-category.drag-over h6 {
+            border-bottom-color: #0d6efd;
+            background: linear-gradient(to bottom, #e7f1ff 85%, rgba(231, 241, 255, 0.9));
         }
         .tech-cards-pool {
             margin-top: 30px;
@@ -257,6 +273,11 @@
             background: #28a745;
             z-index: 1;
             transition: width 0.3s ease;
+        }
+        @media (max-width: 768px) {
+            .tech-cards-container {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
@@ -1257,10 +1278,31 @@
                     padding: 15px;
                     background-color: #f8f9fa;
                     transition: all 0.2s ease;
+                    position: relative;
+                }
+                .tech-category h6 {
+                    position: sticky;
+                    top: 0;
+                    background: linear-gradient(to bottom, #f8f9fa 85%, rgba(248, 249, 250, 0.9));
+                    margin: -15px -15px 15px -15px;
+                    padding: 15px;
+                    border-radius: 8px 8px 0 0;
+                    border-bottom: 2px dashed #e9ecef;
+                    text-align: center;
+                    font-weight: 600;
+                    color: #495057;
+                    backdrop-filter: blur(8px);
+                    -webkit-backdrop-filter: blur(8px);
+                    z-index: 1;
+                    transition: all 0.2s ease;
                 }
                 .tech-category.drag-over {
                     border-color: #0d6efd;
                     background-color: #e7f1ff;
+                }
+                .tech-category.drag-over h6 {
+                    border-bottom-color: #0d6efd;
+                    background: linear-gradient(to bottom, #e7f1ff 85%, rgba(231, 241, 255, 0.9));
                 }
                 .tech-category h6 {
                     margin-bottom: 15px;
